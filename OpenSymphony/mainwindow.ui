@@ -6,20 +6,195 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1159</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>OpenSymphony</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Tab 1</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1109</width>
+             <height>627</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QTableWidget" name="Score_table">
+              <row>
+               <property name="text">
+                <string>C</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>B</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>Bb</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>A</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>G</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>Gb</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>F</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>E</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>Eb</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>Db</string>
+               </property>
+              </row>
+              <row>
+               <property name="text">
+                <string>C</string>
+               </property>
+              </row>
+              <column>
+               <property name="text">
+                <string>1.1</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>1.2</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>1.3</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>1.4</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>2.1</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>2.2</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>2.3</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>2.4</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>3.1</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>3.2</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>3.3</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>3.4</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>4.1</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>4.2</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>4.4</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Tab 2</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>1159</width>
      <height>25</height>
     </rect>
    </property>
@@ -27,26 +202,65 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>Import...</string>
+     </property>
+     <addaction name="actionAudio_Clip"/>
+     <addaction name="actionSoundFont"/>
+     <addaction name="actionMIDI_File"/>
+    </widget>
+    <addaction name="actionSave_Project"/>
+    <addaction name="actionSave_Project_As"/>
+    <addaction name="actionExport_to_Audio_File"/>
+    <addaction name="menuImport"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+    <addaction name="actionDelete"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Tools</string>
     </property>
+    <widget class="QMenu" name="menuAdjust_Volume">
+     <property name="title">
+      <string>Adjust Volume...</string>
+     </property>
+     <addaction name="actionFor_This_Track"/>
+     <addaction name="actionFor_Entire_Song"/>
+    </widget>
+    <addaction name="actionApply_Effect"/>
+    <addaction name="menuAdjust_Volume"/>
+    <addaction name="actionShow_hide_Panning"/>
    </widget>
    <widget class="QMenu" name="menuTrack">
     <property name="title">
      <string>Track</string>
     </property>
+    <widget class="QMenu" name="menuModify_Track">
+     <property name="title">
+      <string>Modify Track...</string>
+     </property>
+     <addaction name="actionSamples"/>
+     <addaction name="actionSoundFont_2"/>
+     <addaction name="actionMIDI_File_2"/>
+    </widget>
+    <addaction name="actionNew_Track"/>
+    <addaction name="actionRemove_Track"/>
+    <addaction name="menuModify_Track"/>
+    <addaction name="actionDuplicate_Track"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHow_to_Use_it"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -63,6 +277,111 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionSave_Project">
+   <property name="text">
+    <string>Save Project</string>
+   </property>
+  </action>
+  <action name="actionSave_Project_As">
+   <property name="text">
+    <string>Save Project As...</string>
+   </property>
+  </action>
+  <action name="actionExport_to_Audio_File">
+   <property name="text">
+    <string>Export to Audio File</string>
+   </property>
+  </action>
+  <action name="actionAudio_Clip">
+   <property name="text">
+    <string>Audio Clip</string>
+   </property>
+  </action>
+  <action name="actionSoundFont">
+   <property name="text">
+    <string>SoundFont</string>
+   </property>
+  </action>
+  <action name="actionMIDI_File">
+   <property name="text">
+    <string>MIDI File</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="text">
+    <string>Cut</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionApply_Effect">
+   <property name="text">
+    <string>Apply Effect...</string>
+   </property>
+  </action>
+  <action name="actionShow_hide_Panning">
+   <property name="text">
+    <string>Show/hide Panning</string>
+   </property>
+  </action>
+  <action name="actionFor_This_Track">
+   <property name="text">
+    <string>For This Track</string>
+   </property>
+  </action>
+  <action name="actionFor_Entire_Song">
+   <property name="text">
+    <string>For Entire Song</string>
+   </property>
+  </action>
+  <action name="actionNew_Track">
+   <property name="text">
+    <string>New Track</string>
+   </property>
+  </action>
+  <action name="actionRemove_Track">
+   <property name="text">
+    <string>Remove Track</string>
+   </property>
+  </action>
+  <action name="actionDuplicate_Track">
+   <property name="text">
+    <string>Duplicate Track</string>
+   </property>
+  </action>
+  <action name="actionSamples">
+   <property name="text">
+    <string>Samples</string>
+   </property>
+  </action>
+  <action name="actionSoundFont_2">
+   <property name="text">
+    <string>SoundFont</string>
+   </property>
+  </action>
+  <action name="actionMIDI_File_2">
+   <property name="text">
+    <string>MIDI File</string>
+   </property>
+  </action>
+  <action name="actionHow_to_Use_it">
+   <property name="text">
+    <string>How to Use it</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

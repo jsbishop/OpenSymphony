@@ -25,10 +25,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    track.cpp \
+    project.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    track.h \
+    project.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    newtrack.ui
