@@ -9,6 +9,7 @@ function song = playBach()
         song = playSong()
 %}
     load bach_fugue.mat
+    %load tempSong.mat
     fs = 8000;
 %     beats_per_minute = 120;
 %     beats_per_second = beats_per_minute / 60;
