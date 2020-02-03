@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow
 	public slots:
 		void createNewTrack();
 		void callFevalgcd();
+		int aFunction();
 		
 		
 	private:

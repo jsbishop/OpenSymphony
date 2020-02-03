@@ -39,7 +39,11 @@ FORMS += \
     newtrack.ui
 
 LIBS += -L"C:/Program Files/MATLAB/R2019a/extern/lib/win64/microsoft" \
-           -llibgen \
-           -llibmx
+           -llibeng \
+           -llibmx \
+        -llibMatlabEngine \
+        -llibMatlabDataArray \
+        -llibmat
+
 
 INCLUDEPATH += "C:/Program Files/MATLAB/R2019a/extern/include"
