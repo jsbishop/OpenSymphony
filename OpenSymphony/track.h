@@ -27,7 +27,7 @@ class Track : public QWidget
 		~Track();
 		
 	signals:
-		void sig_done(Track);
+		//void sig_done(Track);
 		
 	private:
 		Ui::NewTrack *ui;

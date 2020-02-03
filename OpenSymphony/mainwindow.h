@@ -20,6 +20,8 @@ class MainWindow : public QMainWindow
 		
 	public slots:
 		void createNewTrack();
+		void callFevalgcd();
+		
 		
 	private:
 		Ui::MainWindow *ui;

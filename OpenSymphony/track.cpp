@@ -14,7 +14,7 @@ Track::~Track()
 }
 
 
-void Track::on_buttonDone_clicked() {
+void on_buttonDone_clicked() {
 	//add track to project
-	emit this->sig_done(this);	 //probably gonna complain cos it's passing a pointer instead of the value
+	//emit this->sig_done(this);	 //probably gonna complain cos it's passing a pointer instead of the value
 }
