@@ -264,5 +264,6 @@ int MainWindow::aFunction() {
 //	  }
 //	  printf("Done\n");
 //	  return(EXIT_SUCCESS);
+      return 0;
 }
 
