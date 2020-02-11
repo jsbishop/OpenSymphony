@@ -7,6 +7,7 @@
 #include <vector>
 #include "mat.h"
 #include <iostream>
+#include <QCheckBox>
 //#include "engine.h"
 //#include "matrix.h"
 
@@ -45,9 +46,53 @@ void MainWindow::createNewTrack() {
 	
 	newTrack.show();
 	
-	//this->connect(newTrack, SIGNAL(sig_done(Track)), this->song, SLOT(addTrack(Track)));
+//	this->connect(newTrack, SIGNAL(sig_done(Track*)), this->song, SLOT(addTrack(Track*)));
+//	this->connect(newTrack, SIGNAL(sig_done(Track*)), this, SLOT(addTrackTab(Track*))); 
 	
 }
+
+void MainWindow::addTrackTab(Track *newTrack) {
+	//create a new tab widget
+	QTabWidget tempTab;
+	
+	//add a table to it
+	QTableWidget scoreGrid(&tempTab);
+	
+	
+	//add the tab widget to scoreTabs and send signal to reference table
+	const QString trackName = newTrack->name;
+	
+	this->ui->scoreTabs->addTab(&tempTab, trackName);
+
+}
+
+void MainWindow::adjustGridCheckboxes(QTableWidget *t) { //automatically fill each empty cell of the table with a checkbox 
+	QCheckBox *qb;
+	
+	for (int row = 0; row < t->height(); row++) {
+		for (int col = 0; col < t->width(); col++) {
+			
+			if (t->itemAt(row,col)->data(Qt::DisplayRole).isNull()) { //need to make sure this will actually return null when it's supposed to
+				qb = new QCheckBox(t);
+			}
+		}
+	}
+}
+
+void MainWindow::adjustGridTimeSignature(int time1, int time2) { //adjust grid to match the appropriate time signature (time1/time2)
+	//add time1 cells per measure
+	
+	//not sure if we need to do anything with the bottom number here
+}
+
+void MainWindow::adjustGridLength(int length) { //adjust grid to match the appropriate length
+	//length should denote the number of 
+	//default for now should be one cell for each beat for the length of the song
+	
+	//later on will want to have it be multiplied by some number so that the number of cells varies depending on how much the table is zoomed in
+}
+
+
 
 void MainWindow::callFevalgcd() {
 /*
@@ -217,3 +262,4 @@ int MainWindow::aFunction() {
 	  printf("Done\n");
 	  return(EXIT_SUCCESS);
 }
+

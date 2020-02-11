@@ -25,9 +25,10 @@ class Track : public QWidget
 	public:
 		explicit Track(QWidget *parent = 0);
 		~Track();
+		QString name;
 		
 	signals:
-		//void sig_done(Track);
+		void sig_done(Track*);
 		
 	private:
 		Ui::NewTrack *ui;

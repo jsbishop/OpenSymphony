@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QObject>
+#include <QTableWidget>
 #include "track.h"
 #include "project.h"
 
@@ -20,8 +21,15 @@ class MainWindow : public QMainWindow
 		
 	public slots:
 		void createNewTrack();
+		void addTrackTab(Track *newTrack);
+		
+		void adjustGridCheckboxes(QTableWidget *t);
+		void adjustGridTimeSignature(int time1, int time2);
+		void adjustGridLength(int length);
+		
 		void callFevalgcd();
 		int aFunction();
+		
 		
 		
 	private:
