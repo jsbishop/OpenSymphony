@@ -288,7 +288,7 @@ int MainWindow::aFunction() {
 
        // Initialize the Python Interpreter
       Py_Initialize();
-/*
+
       // Build the name object
       pName = PyUnicode_FromString(python_source);  //python_source
 
@@ -314,7 +314,7 @@ int MainWindow::aFunction() {
       Py_DECREF(pName);
 
       // Finish the Python Interpreter
-      Py_Finalize();*/
+      Py_Finalize();
       return 0;
 }
 
