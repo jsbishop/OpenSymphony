@@ -19,6 +19,4 @@ void on_buttonDone_clicked() {
 //	emit this->sig_done(&this);	 //probably gonna complain cos it's passing a pointer instead of the value
 }
 
-void Track::showWindow() {
-	this->ui->show();
-}
+

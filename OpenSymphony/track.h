@@ -26,13 +26,13 @@ class Track : public QWidget
 		explicit Track(QWidget *parent = 0);
 		~Track();
 		QString name;
-		
+		QVector<Note> score; // a structure that contains the actual notes
+				
 	signals:
 		void sig_done(Track*);
 		
 	private:
 		Ui::NewTrack *ui;
-		QVector<Note> Score; // a structure that contains the actual notes
 		
 };
 

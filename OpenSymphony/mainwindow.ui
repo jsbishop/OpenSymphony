@@ -217,6 +217,8 @@
      <addaction name="actionSoundFont"/>
      <addaction name="actionMIDI_File"/>
     </widget>
+    <addaction name="actionNew_Project"/>
+    <addaction name="actionOpen"/>
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
     <addaction name="actionExport_to_Audio_File"/>
@@ -387,6 +389,16 @@
   <action name="actionHow_to_Use_it">
    <property name="text">
     <string>How to Use it</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionNew_Project">
+   <property name="text">
+    <string>New Project</string>
    </property>
   </action>
  </widget>
