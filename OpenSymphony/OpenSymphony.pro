@@ -54,10 +54,13 @@ LIBS += -L"C:/Program Files/MATLAB/R2019a/extern/lib/win64/microsoft" \
            -llibmx \
         -llibMatlabEngine \
         -llibMatlabDataArray \
-        -llibmat
+        -llibmat \
+        -L"C:/Users/jonat/AppData/Local/Programs/Python/Python38/libs" \
+        -lpython38
+
 
 
 INCLUDEPATH += "C:/Program Files/MATLAB/R2019a/extern/include" \
 "C:/Users/jonat/Documents/School/SeniorDesign/pythonqt-master/src" \
-"C:/Users/jonat/AppData/Local/Programs/Python/Python38-32/include" \
+"C:/Users/jonat/AppData/Local/Programs/Python/Python38/include" \
 "C:/Users/jonat/Documents/School/SeniorDesign/pythonqt-master"

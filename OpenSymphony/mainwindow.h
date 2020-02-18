@@ -20,6 +20,8 @@ class MainWindow : public QMainWindow
 		~MainWindow();
 		
 	public slots:
+		void newProject();
+		void openProject();
 		void saveProject();
 		void saveProjectAs();
 		

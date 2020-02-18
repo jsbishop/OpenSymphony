@@ -8,7 +8,9 @@ class Project
 	public:
 		Project();
 		
-		QString saveFileName;
+		void reset(QString fileName);
+		
+//		OSProjectFile projectFile;
 		
 		QVector<Track> tracks;
 		

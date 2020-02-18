@@ -10,6 +10,8 @@ class OSProjectFile
 		OSProjectFile();
 		QString saveFileName;
 		
+		int setProjectFileName(QString fileName);
+		
 		int saveProjectFile();
 };
 

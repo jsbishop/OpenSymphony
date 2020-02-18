@@ -88,7 +88,7 @@ void MainWindow::newProject() {
 			return;
 	}
 	
-	QString newFileName = QFileDialog::getSaveFileName(this->ui, "Create New Project","", "OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
+	//QString newFileName = QFileDialog::getSaveFileName(nullptr, "Create New Project","", "OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
 }
 
 void MainWindow::openProject() {
@@ -108,7 +108,7 @@ void MainWindow::openProject() {
 	
 	QString openFileName = QFileDialog::getOpenFileName(this, "Open Project", "", "OpenSymphony Project (*.txt)");
 	
-	this->song.reset(openFileName);
+	//this->song.reset(openFileName);
 	//set current project to the data loaded from file
 	
 }
@@ -118,7 +118,7 @@ void MainWindow::saveProject() {
 }
 
 void MainWindow::saveProjectAs() {
-	QString saveFileName = QFileDialog::getSaveFileName(this,"Save Project As...","","*.midi, OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
+//	QString saveFileName = QFileDialog::getSaveFileName(this,"Save Project As...","","*.midi, OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
 	
 }
 
@@ -127,7 +127,7 @@ void MainWindow::createNewTrack() {
 	std::cout << "It worked" << std::endl;
 	Track newTrack;
 	
-	newTrack.show();
+	//newTrack.show();
 	
 //	this->connect(newTrack, SIGNAL(sig_done(Track*)), this->song, SLOT(addTrack(Track*)));
 //	this->connect(newTrack, SIGNAL(sig_done(Track*)), this, SLOT(addTrackTab(Track*))); 
@@ -140,13 +140,13 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	
 	//add a table to it
 	QTableWidget scoreGrid(&tempTab);
-	scoreGrid.setColumnCount(newTrack->score.length());
+	//scoreGrid.setColumnCount(newTrack->score.length());
 	
 	
 	//add the tab widget to scoreTabs and send signal to reference table
-	const QString trackName = newTrack->name;
+	//const QString trackName = newTrack->name;
 	
-	this->ui->scoreTabs->addTab(&tempTab, trackName);
+//	this->ui->scoreTabs->addTab(&tempTab, trackName);
 	adjustGridCheckboxes(&scoreGrid);
 
 }
@@ -190,8 +190,8 @@ void MainWindow::adjustGridLength(int length) { //adjust grid to match the appro
 void MainWindow::editTrackSamples() {
 	//open the newtrack.ui window corresponding to the current tab (track)
 	
-	this->song.tracks[this->ui->scoreTabs->currentIndex()].show();
-	this->song.tracks[this->ui->scoreTabs->currentIndex()].ui.buttonSave.show();
+//	this->song.tracks[this->ui->scoreTabs->currentIndex()].show();
+	//this->song.tracks[this->ui->scoreTabs->currentIndex()].ui.buttonSave.show();
 	
 }
 
