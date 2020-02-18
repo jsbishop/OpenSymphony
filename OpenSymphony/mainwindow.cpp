@@ -24,13 +24,7 @@
 
 #pragma push_macro("slots")
 #undef slots
-#ifdef _DEBUG
-  #undef _DEBUG
-  #include <Python.h>
-  #define _DEBUG
-#else
-  #include <Python.h>
-#endif
+#include <Python.h>
 #pragma pop_macro("slots")
 
 #include <QDebug>
@@ -374,6 +368,7 @@ int MainWindow::aFunction() {
 //       }
 
        // Initialize the Python Interpreter
+      //Crashing here
       Py_Initialize();
 
       // Build the name object
