@@ -357,10 +357,13 @@ int MainWindow::aFunction() {
 //	  printf("Done\n");
 //	  return(EXIT_SUCCESS);
 
-      PyObject *pName, *pModule, *pDict, *pFunc, *pValue;
-//      char *python_source, *function_name;
-      char python_source[] = "../MATLAB/py_function";
-      char function_name[] = "multiply";
+    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
+//  char *python_source, *function_name;
+    char python_source[] = "py_function";
+    char function_name[] = "multiply";
+    wchar_t path[] = L"../MATLAB/";
+    int args[] = {5, 1};
+
 //       if (argc < 3)
 //       {
 //           printf("Usage: exe_name python_source function_name\n");
@@ -368,35 +371,62 @@ int MainWindow::aFunction() {
 //       }
 
        // Initialize the Python Interpreter
-      //Crashing here
-      Py_Initialize();
+    Py_Initialize();
 
-      // Build the name object
-      pName = PyUnicode_FromString(python_source);  //python_source
+    PySys_SetPath(path);
 
-      // Load the module object
-      pModule = PyImport_Import(pName);
+    // Build the name object
+    pName = PyUnicode_FromString(python_source);  //python_source
 
-      // pDict is a borrowed reference
-      pDict = PyModule_GetDict(pModule);
+    // Load the module object
+    pModule = PyImport_Import(pName);
 
-      // pFunc is also a borrowed reference
-      pFunc = PyDict_GetItemString(pDict, function_name);  //function_name
+    // pDict is a borrowed reference
+    pDict = PyModule_GetDict(pModule);
 
-      if (PyCallable_Check(pFunc))
-      {
-          PyObject_CallObject(pFunc, NULL);
-      } else
-      {
-          PyErr_Print();
-      }
+    // pFunc is also a borrowed reference
+    pFunc = PyDict_GetItemString(pDict, function_name);  //function_name
 
-      // Clean up
-      Py_DECREF(pModule);
-      Py_DECREF(pName);
 
-      // Finish the Python Interpreter
-      Py_Finalize();
-      return 0;
+    if (PyCallable_Check(pFunc))
+    {
+        // Prepare the argument list for the call
+
+        pArgs = PyTuple_New(2);
+
+        for (int i = 0; i < 2; i++)
+        {
+            pValue = PyLong_FromLong(args[i]);
+            if (!pValue)
+            {
+                PyErr_Print();
+                return 1;
+            }
+
+            PyTuple_SetItem(pArgs, i, pValue);
+        }
+
+
+        pValue = PyObject_CallObject(pFunc, pArgs);
+
+        if (pArgs != NULL)
+        {
+            Py_DECREF(pArgs);
+        }
+
+    } else
+    {
+        PyErr_Print();
+    }
+
+    qDebug() << PyLong_AsLong(pValue);
+
+    // Clean up
+    Py_DECREF(pModule);
+    Py_DECREF(pName);
+
+    // Finish the Python Interpreter
+    Py_Finalize();
+    return 0;
 }
 
