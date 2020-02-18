@@ -20,6 +20,9 @@ class MainWindow : public QMainWindow
 		~MainWindow();
 		
 	public slots:
+		void saveProject();
+		void saveProjectAs();
+		
 		void createNewTrack();
 		void addTrackTab(Track *newTrack);
 		
@@ -30,6 +33,7 @@ class MainWindow : public QMainWindow
 		void callFevalgcd();
 		int aFunction();
 		
+		void editTrackSamples();
 		
 		
 	private:
@@ -40,4 +44,7 @@ class MainWindow : public QMainWindow
 		QVector<Track> tracks; //this will store the information for each of the tracks, including maybe the actual notes
 };
 
+//class GridBox : public QItemDelegate {
+		
+//}
 #endif // MAINWINDOW_H

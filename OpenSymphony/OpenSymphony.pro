@@ -27,16 +27,27 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     track.cpp \
-    project.cpp
+    project.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    project.cpp \
+    track.cpp \
+    osprojectfile.cpp
 
 HEADERS += \
         mainwindow.h \
     track.h \
-    project.h
+    project.h \
+    mainwindow.h \
+    project.h \
+    track.h \
+    osprojectfile.h
 
 FORMS += \
         mainwindow.ui \
-    newtrack.ui
+    newtrack.ui \
+    tracksamples.ui \
+    osprojectfile.ui
 
 LIBS += -L"C:/Program Files/MATLAB/R2019a/extern/lib/win64/microsoft" \
            -llibeng \
@@ -46,4 +57,7 @@ LIBS += -L"C:/Program Files/MATLAB/R2019a/extern/lib/win64/microsoft" \
         -llibmat
 
 
-INCLUDEPATH += "C:/Program Files/MATLAB/R2019a/extern/include"
+INCLUDEPATH += "C:/Program Files/MATLAB/R2019a/extern/include" \
+"C:/Users/jonat/Documents/School/SeniorDesign/pythonqt-master/src" \
+"C:/Users/jonat/AppData/Local/Programs/Python/Python38-32/include" \
+"C:/Users/jonat/Documents/School/SeniorDesign/pythonqt-master"

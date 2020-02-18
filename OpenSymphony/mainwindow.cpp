@@ -8,6 +8,9 @@
 //#include "mat.h"
 #include <iostream>
 #include <QCheckBox>
+#include <QHBoxLayout>
+#include <QFileDialog>
+#include <QMessageBox>
 //#include "engine.h"
 //#include "matrix.h"
 
@@ -16,7 +19,7 @@
 //#include "MatlabDataArray.hpp"
 //#include "MatlabEngine.hpp"
 
-#include "PythonQt.h"
+//#include "PythonQt.h"
 #include <QApplication>
 
 #include <QDebug>
@@ -32,9 +35,19 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	ui->setupUi(this);
 	
+	this->connect(this->ui->actionSave_Project, SIGNAL(triggered(bool)), this, SLOT(saveProject()));
+	this->connect(this->ui->actionSave_Project_As, SIGNAL(triggered(bool)), this, SLOT(saveProjectAs()));
+	
+	
 	this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
 	//this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(callFevalgcd()));
 	this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(aFunction()));
+	
+	this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
+	
+	Track testTrack;
+	testTrack.score.resize(12);
+	addTrackTab(&testTrack);
 	
 }
 
@@ -42,6 +55,62 @@ MainWindow::~MainWindow()
 {
 	delete ui;
 }
+
+void MainWindow::newProject() {
+	int ret = QMessageBox::question(this, "OpenSymphony", "Do you want to open in a new window?",
+								   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+	switch(ret) {
+		case QMessageBox::Yes:
+			//open new project in new window
+			//for now I won't try making that work
+			break;
+			
+		case QMessageBox::No:
+			//ask user if they want to save current project
+			break;
+			
+		case QMessageBox::Cancel:
+			return;
+			break;
+			
+		default:
+			return;
+	}
+	
+	QString newFileName = QFileDialog::getSaveFileName(this->ui, "Create New Project","", "OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
+}
+
+void MainWindow::openProject() {
+	//if user has unsaved changes to the current project, open in a new window
+	int ret = QMessageBox::question(this, "OpenSymphony", "Do you want to save the current project first?",
+								   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+	switch(ret) {
+		case QMessageBox::Yes:
+			break;
+			
+		case QMessageBox::No:
+			break;
+			
+		default:
+			return;
+	}
+	
+	QString openFileName = QFileDialog::getOpenFileName(this, "Open Project", "", "OpenSymphony Project (*.txt)");
+	
+	this->song.reset(openFileName);
+	//set current project to the data loaded from file
+	
+}
+
+void MainWindow::saveProject() {
+	
+}
+
+void MainWindow::saveProjectAs() {
+	QString saveFileName = QFileDialog::getSaveFileName(this,"Save Project As...","","*.midi, OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
+	
+}
+
 
 void MainWindow::createNewTrack() {
 	std::cout << "It worked" << std::endl;
@@ -60,12 +129,14 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	
 	//add a table to it
 	QTableWidget scoreGrid(&tempTab);
+	scoreGrid.setColumnCount(newTrack->score.length());
 	
 	
 	//add the tab widget to scoreTabs and send signal to reference table
 	const QString trackName = newTrack->name;
 	
 	this->ui->scoreTabs->addTab(&tempTab, trackName);
+	adjustGridCheckboxes(&scoreGrid);
 
 }
 
@@ -74,10 +145,19 @@ void MainWindow::adjustGridCheckboxes(QTableWidget *t) { //automatically fill ea
 	
 	for (int row = 0; row < t->height(); row++) {
 		for (int col = 0; col < t->width(); col++) {
-			
-			if (t->itemAt(row,col)->data(Qt::DisplayRole).isNull()) { //need to make sure this will actually return null when it's supposed to
-				qb = new QCheckBox(t);
-			}
+//			qDebug() << t->itemAt(row,col)->data(Qt::DisplayRole);
+			//if (t->itemAt(row,col)->data(Qt::DisplayRole).isNull()) { //need to make sure this will actually return null when it's supposed to
+				//qb = new QCheckBox(t->itemAt(row,col));
+				
+				QHBoxLayout *l = new QHBoxLayout();
+				l->addWidget((new QCheckBox()));
+				
+				QWidget *w = new QWidget();
+			    w->setLayout(l);
+				
+				t->setCellWidget(row,col, w);
+				qDebug("I did it supposedly");
+			//}
 		}
 	}
 }
@@ -96,6 +176,13 @@ void MainWindow::adjustGridLength(int length) { //adjust grid to match the appro
 }
 
 
+void MainWindow::editTrackSamples() {
+	//open the newtrack.ui window corresponding to the current tab (track)
+	
+	this->song.tracks[this->ui->scoreTabs->currentIndex()].show();
+	this->song.tracks[this->ui->scoreTabs->currentIndex()].ui.buttonSave.show();
+	
+}
 
 void MainWindow::callFevalgcd() {
 /*
@@ -264,5 +351,6 @@ int MainWindow::aFunction() {
 //	  }
 //	  printf("Done\n");
 //	  return(EXIT_SUCCESS);
+	return 0;
 }
 
