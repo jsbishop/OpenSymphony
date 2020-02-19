@@ -419,7 +419,8 @@ int MainWindow::aFunction() {
         PyErr_Print();
     }
 
-    qDebug() << PyLong_AsLong(pValue);
+    //qDebug() << PyUnicode_AsUTF8(pValue);  //String
+    qDebug() << PyLong_AsLong(pValue);  //Long
 
     // Clean up
     Py_DECREF(pModule);
