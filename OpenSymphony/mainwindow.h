@@ -19,6 +19,8 @@ class MainWindow : public QMainWindow
 		explicit MainWindow(QWidget *parent = 0);
 		~MainWindow();
 		
+		Track testTrack;
+		
 	public slots:
 		void newProject();
 		void openProject();

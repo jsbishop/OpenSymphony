@@ -23,7 +23,7 @@ class Track : public QWidget
 		Q_OBJECT
 		
 	public:
-		explicit Track(QWidget *parent = 0);
+		explicit Track(QWidget *parent = nullptr);
 		~Track();
 		QString name;
 		QVector<Note> score; // a structure that contains the actual notes

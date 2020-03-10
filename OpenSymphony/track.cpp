@@ -1,11 +1,9 @@
 #include "track.h"
 #include "ui_newtrack.h"
 
-Track::Track(QWidget *parent) :
-	QWidget(parent),
-	ui(new Ui::NewTrack)
-{
+Track::Track(QWidget *parent) : QWidget(parent), ui(new Ui::NewTrack) {
 	ui->setupUi(this);
+	qDebug("created new track");
 }
 
 Track::~Track()

@@ -22,6 +22,8 @@
 //#include "PythonQt.h"
 //#include <QApplication>
 
+
+
 #pragma push_macro("slots")
 #undef slots
 #ifdef _DEBUG
@@ -31,7 +33,7 @@
 #else
   #include <Python.h>
 #endif
-#pragma pop_macro("slots")
+#pragma pop_macro("slots") 
 
 #include <QDebug>
 
@@ -46,8 +48,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	ui->setupUi(this);
 	
+	this->connect(this->ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(newProject()));
 	this->connect(this->ui->actionSave_Project, SIGNAL(triggered(bool)), this, SLOT(saveProject()));
 	this->connect(this->ui->actionSave_Project_As, SIGNAL(triggered(bool)), this, SLOT(saveProjectAs()));
+	this->connect(this->ui->actionOpen, SIGNAL(triggered(bool)), this, SLOT(openProject()));
 	
 	
 	this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
@@ -56,8 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
 	
-	Track testTrack;
-	testTrack.score.resize(12);
+	this->testTrack.score.resize(12);
 	addTrackTab(&testTrack);
 	
 }
@@ -95,6 +98,7 @@ void MainWindow::openProject() {
 	//if user has unsaved changes to the current project, open in a new window
 	int ret = QMessageBox::question(this, "OpenSymphony", "Do you want to save the current project first?",
 								   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+	qDebug("here");
 	switch(ret) {
 		case QMessageBox::Yes:
 			break;
@@ -118,15 +122,31 @@ void MainWindow::saveProject() {
 }
 
 void MainWindow::saveProjectAs() {
-//	QString saveFileName = QFileDialog::getSaveFileName(this,"Save Project As...","","*.midi, OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
-	
+	QString saveFileName = QFileDialog::getSaveFileName(this,"Save Project As...","",tr("OpenSymphony Project (*.txt) *.mid"));
+	switch(this->song.projectFile.setProjectFileName(saveFileName)) {
+		case 0:
+			//do nothing, it succeeded
+			return;
+			break;
+			
+		default:
+			int success = QMessageBox::warning(this, "Uh-Oh", "I wasn't able to save the project. Do you want to try again?",
+												QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+			switch (success) {
+				case QMessageBox::Yes:
+					saveProjectAs();	
+					break;
+				default:
+					return;
+			}
+	}
 }
 
 
 void MainWindow::createNewTrack() {
-	std::cout << "It worked" << std::endl;
-	Track newTrack;
-	
+	Track *newTrack = new Track();
+	newTrack->show();
+	qDebug("I've called newTrack()");
 	//newTrack.show();
 	
 //	this->connect(newTrack, SIGNAL(sig_done(Track*)), this->song, SLOT(addTrack(Track*)));
@@ -140,14 +160,24 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	
 	//add a table to it
 	QTableWidget scoreGrid(&tempTab);
-	//scoreGrid.setColumnCount(newTrack->score.length());
+	scoreGrid.setColumnCount(newTrack->score.length());
 	
 	
 	//add the tab widget to scoreTabs and send signal to reference table
 	//const QString trackName = newTrack->name;
 	
-//	this->ui->scoreTabs->addTab(&tempTab, trackName);
+	int index = this->ui->scoreTabs->addTab(this->ui->scoreTabs, "trackName");
+	qDebug() << "the index is" << index;
 	adjustGridCheckboxes(&scoreGrid);
+
+	index = this->ui->scoreTabs->addTab(this->ui->scoreTabs, "trackName");
+		qDebug() << "the index is" << index;
+		adjustGridCheckboxes(&scoreGrid);
+		//tempTab.update();
+	//tempTab.show();
+	this->ui->scoreTabs->tabBar()->setCurrentIndex(2);
+	
+	
 
 }
 
@@ -161,13 +191,13 @@ void MainWindow::adjustGridCheckboxes(QTableWidget *t) { //automatically fill ea
 				//qb = new QCheckBox(t->itemAt(row,col));
 				
 				QHBoxLayout *l = new QHBoxLayout();
-				l->addWidget((new QCheckBox()));
+				l->addWidget((new QCheckBox("text")));
 				
 				QWidget *w = new QWidget();
 			    w->setLayout(l);
 				
 				t->setCellWidget(row,col, w);
-				qDebug("I did it supposedly");
+				qDebug() << "I did it supposedly for cell [" << row << col << "]";
 			//}
 		}
 	}
@@ -401,7 +431,7 @@ int MainWindow::aFunction() {
       Py_DECREF(pName);
 
       // Finish the Python Interpreter
-      Py_Finalize();
-      return 0;
+      Py_Finalize();  
+      return 0; 
 }
 

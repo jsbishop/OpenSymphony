@@ -2,6 +2,7 @@
 #define PROJECT_H
 
 #include "track.h"
+#include "osprojectfile.h"
 
 class Project
 {
@@ -10,7 +11,7 @@ class Project
 		
 		void reset(QString fileName);
 		
-//		OSProjectFile projectFile;
+		OSProjectFile projectFile;
 		
 		QVector<Track> tracks;
 		
