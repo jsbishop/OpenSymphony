@@ -10,7 +10,9 @@ namespace Ui {
 
 struct Note {
 	int pitch; // for now let's say the pitch is measured 
-	double length; // for now let's say the length is measured in quarter notes
+	//double length; // for now let's say the length is measured in quarter notes
+	int startPos; //location where the note begins
+	int endPos;   //location where the note ends
 	int velocity; // not sure what the metric for this would be
 	
 	int afterTouch; //would be nice to implement but not critical
@@ -25,6 +27,9 @@ class Track : public QWidget
 	public:
 		explicit Track(QWidget *parent = nullptr);
 		~Track();
+		void addNote(int pos, int pitch);
+		void removeNote(int pos, int pitch);
+		
 		QString name;
 		QVector<Note> score; // a structure that contains the actual notes
 				

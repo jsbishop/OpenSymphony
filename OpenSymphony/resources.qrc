@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>button_default.png</file>
+        <file>button_checked.png</file>
+        <file>OpenSymphony_Icon.png</file>
+    </qresource>
+</RCC>

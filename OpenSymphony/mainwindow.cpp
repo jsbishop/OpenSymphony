@@ -11,6 +11,7 @@
 #include <QHBoxLayout>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QLabel>
 //#include "engine.h"
 //#include "matrix.h"
 
@@ -56,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	this->testTrack.score.resize(12);
 	addTrackTab(&testTrack);
+	this->ui->testButton->hide();
 	
 }
 
@@ -141,10 +143,9 @@ void MainWindow::createNewTrack() {
 	Track *newTrack = new Track();
 	newTrack->show();
 	qDebug("I've called newTrack()");
-	//newTrack.show();
 	
-//	this->connect(newTrack, SIGNAL(sig_done(Track*)), this->song, SLOT(addTrack(Track*)));
-//	this->connect(newTrack, SIGNAL(sig_done(Track*)), this, SLOT(addTrackTab(Track*))); 
+	//this->connect(newTrack, SIGNAL(sig_done(Track*)), this->song, SLOT(addTrack(Track*)));
+	this->connect(newTrack, SIGNAL(sig_done(Track*)), this, SLOT(addTrackTab(Track*))); 
 	
 }
 
@@ -153,45 +154,54 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	QTabWidget tempTab;
 	
 	//add a table to it
-	QTableWidget scoreGrid(&tempTab);
-	scoreGrid.setColumnCount(newTrack->score.length());
+	qDebug() << "score length:" << newTrack->score.length();
 	
+	QTableWidget *scoreGrid = new QTableWidget(20,newTrack->score.length(),nullptr);
+	//scoreGrid->setRowCount(20);	
+	//scoreGrid->setColumnCount(newTrack->score.length());
 	
 	//add the tab widget to scoreTabs and send signal to reference table
 	//const QString trackName = newTrack->name;
 	
-	int index = this->ui->scoreTabs->addTab(this->ui->scoreTabs, "trackName");
-	qDebug() << "the index is" << index;
-	adjustGridCheckboxes(&scoreGrid);
+	//int index = this->ui->scoreTabs->addTab(scoreGrid, "trackName");
+	//QLabel *myLabel = new QLabel("Hello World", this);
+	//int index = this->ui->scoreTabs->addTab(myLabel, "My Label Tab");
+	//qDebug() << "the index is" << index << "and the table is" << scoreGrid->rowCount() << "x" << scoreGrid->columnCount();
+	//adjustGridCheckboxes(scoreGrid);
 
-	index = this->ui->scoreTabs->addTab(this->ui->scoreTabs, "trackName");
-		qDebug() << "the index is" << index;
-		adjustGridCheckboxes(&scoreGrid);
-		//tempTab.update();
-	//tempTab.show();
-	this->ui->scoreTabs->tabBar()->setCurrentIndex(2);
-	
-	
+	int index = this->ui->scoreTabs->addTab(scoreGrid, "Alex's Custom Instrument");
+	//qDebug() << "the index is" << index << "and the table is" << scoreGrid->rowCount() << "x" << scoreGrid->columnCount();
+	adjustGridCheckboxes(scoreGrid);
+
+	this->ui->scoreTabs->tabBar()->setCurrentIndex(index);
+	this->ui->scoreTabs->tabBar()->setTabText(0, "Piano");
+	this->ui->scoreTabs->tabBar()->setTabText(1, "Alto Sax");
+	this->connect(scoreGrid,SIGNAL(cellClicked(int,int)), this, SLOT(cellChecked(int, int)));
 
 }
 
 void MainWindow::adjustGridCheckboxes(QTableWidget *t) { //automatically fill each empty cell of the table with a checkbox 
 	QCheckBox *qb;
-	
-	for (int row = 0; row < t->height(); row++) {
-		for (int col = 0; col < t->width(); col++) {
+	//qDebug() << "height of t is" << t->rowCount();
+	for (int row = 0; row < t->rowCount(); row++) {
+		for (int col = 0; col < t->columnCount(); col++) {
 //			qDebug() << t->itemAt(row,col)->data(Qt::DisplayRole);
 			//if (t->itemAt(row,col)->data(Qt::DisplayRole).isNull()) { //need to make sure this will actually return null when it's supposed to
 				//qb = new QCheckBox(t->itemAt(row,col));
 				
 				QHBoxLayout *l = new QHBoxLayout();
-				l->addWidget((new QCheckBox("text")));
+				QCheckBox *qb = new QCheckBox("");
+				QIcon defaultButtonIcon(":/images/button_default.png");
+				qb->setIcon(defaultButtonIcon);
+				qb->setStyleSheet("QCheckBox::indicator  { width:150px; height: 150px;} QCheckBox::indicator::checked {image: url(:/images/button_checked.png);}");
+				//l->addWidget((new QCheckBox("")));
+				l->addWidget(qb);
 				
 				QWidget *w = new QWidget();
 			    w->setLayout(l);
 				
 				t->setCellWidget(row,col, w);
-				qDebug() << "I did it supposedly for cell [" << row << col << "]";
+				//qDebug() << "I did it supposedly for cell [" << row << col << "]";
 			//}
 		}
 	}
@@ -210,6 +220,23 @@ void MainWindow::adjustGridLength(int length) { //adjust grid to match the appro
 	//later on will want to have it be multiplied by some number so that the number of cells varies depending on how much the table is zoomed in
 }
 
+void MainWindow::cellChecked(int row, int col) { //add note to score
+	//determine current tab
+	int currentTab = this->ui->scoreTabs->currentIndex();
+	
+	//add note to score
+	qDebug() << "Adding note to track" << currentTab << "at position" << col << "with pitch" << row;	
+	this->song.addNote(currentTab, col, row);
+}
+
+void MainWindow::cellUnchecked(int row, int col) { //remove note from score
+	//determine current tab
+	int currentTab = this->ui->scoreTabs->currentIndex();
+	
+	//remove note from score
+	qDebug() << "Removing note from track" << currentTab << "at position" << col << "with pitch" << row;
+	this->song.removeNote(currentTab,col,row);
+}
 
 void MainWindow::editTrackSamples() {
 	//open the newtrack.ui window corresponding to the current tab (track)

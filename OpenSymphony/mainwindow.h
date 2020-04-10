@@ -34,6 +34,9 @@ class MainWindow : public QMainWindow
 		void adjustGridTimeSignature(int time1, int time2);
 		void adjustGridLength(int length);
 		
+		void cellChecked(int row, int col);
+		void cellUnchecked(int row, int col);
+		
 		void callFevalgcd();
 		int aFunction();
 		
