@@ -11,7 +11,7 @@ class Project
 		
 		void reset(QString fileName);
 		
-		OSProjectFile projectFile;
+//		OSProjectFile projectFile;
 		
 		//QVector<Track> tracks;
 		

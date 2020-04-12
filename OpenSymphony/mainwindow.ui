@@ -14,7 +14,7 @@
    <string>OpenSymphony</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="resources.qrc">
+   <iconset>
     <normaloff>:/images/OpenSymphony_Icon.png</normaloff>:/images/OpenSymphony_Icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -54,8 +54,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1137</width>
-             <height>659</height>
+             <width>1135</width>
+             <height>663</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -233,7 +233,7 @@
      <x>0</x>
      <y>0</y>
      <width>1159</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -434,8 +434,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

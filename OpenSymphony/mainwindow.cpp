@@ -5,34 +5,44 @@
 #include <string.h>
 #include <stdlib.h>
 #include <vector>
-//#include "mat.h"
+
 #include <iostream>
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
-//#include "engine.h"
-//#include "matrix.h"
 
-//#include "MatlabEngine/matlab_engine.hpp"
-
-//#include "MatlabDataArray.hpp"
-//#include "MatlabEngine.hpp"
-
-//#include "PythonQt.h"
 //#include <QApplication>
-
-
 
 #pragma push_macro("slots")
 #undef slots
 #include <Python.h>
+#include <../Lib/site-packages/numpy/core/include/numpy/arrayobject.h>
 #pragma pop_macro("slots")
+
+#include "instrumentbank.h"
 
 #include <QDebug>
 
 #define BUFSIZE 256
+
+int MainWindow::init_numpy(){
+    Py_Initialize();
+    import_array(); // PyError if not successful
+    //Up to python should be the same as your python path.  After that, include the paths as shown here to site-packages, Lib, and DLLs with a ; between each.
+    wchar_t path[] = L"../OpenSymphonyPython/;"
+                     "C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/site-packages/;"
+                     "C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/;"
+                     "C:/Users/amjas/AppData/Local/Programs/Python/Python38/DLLs";
+    PySys_SetPath(path);
+//    wchar_t pathSciPy[] = L"C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/site-packages";
+//    wchar_t pathSciPy[] = L"../Lib/site-packages";
+//    PySys_SetPath(pathSciPy);
+    return 0;
+}
+
+static int numpy_initialized =  -1;
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -50,15 +60,51 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	
 	this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
-	//this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(callFevalgcd()));
-	this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(aFunction()));
+//    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(callFevalgcd()));
+    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTest()));
 	
 	this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
 	
 	this->testTrack.score.resize(12);
 	addTrackTab(&testTrack);
-	this->ui->testButton->hide();
-	
+    //this->ui->testButton->hide();
+
+    //initialize python
+    numpy_initialized = init_numpy();
+
+    initializeInstrumentBank();
+
+
+}
+
+void MainWindow::initializeInstrumentBank() {
+    float harmonicsTrumpet[] = {0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020};
+    char nameTrumpet[] = "trumpet";
+    iBank.addInstrument(nameTrumpet, harmonicsTrumpet);
+
+    char nameFlute[] = "flute";
+    float harmonicsFlute[] = {0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0};
+    iBank.addInstrument(nameFlute, harmonicsFlute);
+
+    char nameOboe[] = "oboe";
+    float harmonicsOboe[] = {0.4762, 0.4524, 1.0000, 0.0952, 0.1000, 0.1048, 0.2619, 0.1429, 0.0952};
+    iBank.addInstrument(nameOboe, harmonicsOboe);
+
+    char nameClarinet[] = "clarinet";
+    float harmonicsClarinet[] = {1, .275, .225, .1, .3, .2, .1, 0, 0};
+    iBank.addInstrument(nameClarinet, harmonicsClarinet);
+
+    char nameGuitar[] = "guitar";
+    float harmonicsGuitar[] = {0.8000, 0.5440, 1.0000, 0.8800, 0.8800, 0.8000, 0, 0.0400, 0.1600, 0.6000};
+    iBank.addInstrument(nameGuitar, harmonicsGuitar);
+
+    char nameHorn[] = "horn";
+    float harmonicsHorn[] = {1, .39, .225, .2, .3, .25, .3, .25, .2, .1, .05};
+    iBank.addInstrument(nameHorn, harmonicsHorn);
+
+    char namePiano[] = "piano";
+    float harmonicsPiano[] = {1, .1, .325, .5, .4, .4, 0, .25, 0};
+    iBank.addInstrument(namePiano, harmonicsPiano);
 }
 
 MainWindow::~MainWindow()
@@ -118,24 +164,24 @@ void MainWindow::saveProject() {
 }
 
 void MainWindow::saveProjectAs() {
-	QString saveFileName = QFileDialog::getSaveFileName(this,"Save Project As...","",tr("OpenSymphony Project (*.txt) *.mid"));
-	switch(this->song.projectFile.setProjectFileName(saveFileName)) {
-		case 0:
-			//do nothing, it succeeded
-			return;
-			break;
+//    QString saveFileName = QFileDialog::getSaveFileName(this,"Save Project As...","",tr("OpenSymphony Project (*.txt) *.mid"));
+//    switch(this->song.projectFile.setProjectFileName(saveFileName)) {
+//        case 0:
+//            //do nothing, it succeeded
+//            return;
+//            break;
 			
-		default:
-			int success = QMessageBox::warning(this, "Uh-Oh", "I wasn't able to save the project. Do you want to try again?",
-												QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-			switch (success) {
-				case QMessageBox::Yes:
-					saveProjectAs();	
-					break;
-				default:
-					return;
-			}
-	}
+//        default:
+//            int success = QMessageBox::warning(this, "Uh-Oh", "I wasn't able to save the project. Do you want to try again?",
+//                                                QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+//            switch (success) {
+//                case QMessageBox::Yes:
+//                    saveProjectAs();
+//                    break;
+//                default:
+//                    return;
+//            }
+//    }
 }
 
 
@@ -246,229 +292,157 @@ void MainWindow::editTrackSamples() {
 	
 }
 
-void MainWindow::callFevalgcd() {
-/*
-    // Pass vector containing MATLAB data array scalar
-    using namespace matlab::engine;
+//static PyMethodDef PyMethods[] = {
+//    {"multiply", multiply, METH_VARARGS},
+//    {"mult_array", mult_array, METH_VARARGS},
+//    {"mult_array_2d", mult_array_2d, METH_VARARGS},
+//    {"string_test", string_test, METH_VARARGS},
+//    {NULL, NULL, 0, NULL}
+//};
 
-    // Start MATLAB engine synchronously
-    std::unique_ptr<MATLABEngine> matlabPtr = startMATLAB();
+//static struct PyModuleDef py_function =
+//{
+//    PyModuleDef_HEAD_INIT,
+//    "py_function", /* name of module */
+//    "",          /* module documentation, may be NULL */
+//    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+//    PyMethods
+//};
 
-    // Create MATLAB data array factory
-    matlab::data::ArrayFactory factory;
+//PyMODINIT_FUNC
+//PyInitpy_function(void)
+//{
+//   return PyModule_Create(&py_function);
+//}
 
-    // Pass vector containing 2 scalar args in vector    
-    std::vector<matlab::data::Array> args({
-        factory.createScalar<int16_t>(30),
-        factory.createScalar<int16_t>(56) });
-
-    // Call MATLAB function and return result
-    FutureResult<matlab::data::Array> future = matlabPtr->fevalAsync(u"gcd", args);
-	matlab::data::TypedArray<int16_t> results = future.get();
-    int16_t v = results[0];
-    std::cout << "Result: " << v << std::endl;
- */
+PyObject *MainWindow::makelist(int array[], size_t size) {
+    PyObject *l = PyList_New(size);
+    for (size_t i = 0; i != size; ++i) {
+        PyList_SET_ITEM(l, i, PyLong_FromLong(array[i]));
+    }
+    return l;
 }
- 
 
-int MainWindow::aFunction() {
-//      MATFile *pmat;
-//	  mxArray *pa1, *pa2, *pa3;
-//	  std::vector<int> myInts;
-//	  myInts.push_back(1);
-//	  myInts.push_back(2);
-//	  printf("Accessing a STL vector: %d\n", myInts[1]);
-	
-//	  double data[9] = { 1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 9.0 };
-//	  const char *file = "tempSong.mat";
-//	  char str[BUFSIZE];
-//	  int status;
-	
-//	  printf("Creating file %s...\n\n", file);
-//	  pmat = matOpen(file, "w");
-//	  if (pmat == NULL) {
-//		printf("Error creating file %s\n", file);
-//		printf("(Do you have write permission in this directory?)\n");
-//		return(EXIT_FAILURE);
-//	  }
-	
-//	  pa1 = mxCreateDoubleMatrix(3,3,mxREAL);
-//	  if (pa1 == NULL) {
-//		  printf("%s : Out of memory on line %d\n", __FILE__, __LINE__);
-//		  printf("Unable to create mxArray.\n");
-//		  return(EXIT_FAILURE);
-//	  }
-	
-//	  pa2 = mxCreateDoubleMatrix(3,3,mxREAL);
-//	  if (pa2 == NULL) {
-//		  printf("%s : Out of memory on line %d\n", __FILE__, __LINE__);
-//		  printf("Unable to create mxArray.\n");
-//		  return(EXIT_FAILURE);
-//	  }
-//	  memcpy((void *)(mxGetPr(pa2)), (void *)data, sizeof(data));
-	  
-//	  pa3 = mxCreateString("MATLAB: the language of technical computing");
-//	  if (pa3 == NULL) {
-//		  printf("%s :  Out of memory on line %d\n", __FILE__, __LINE__);
-//		  printf("Unable to create string mxArray.\n");
-//		  return(EXIT_FAILURE);
-//	  }
-	
-//	  status = matPutVariable(pmat, "LocalDouble", pa1);
-//	  if (status != 0) {
-//		  printf("%s :  Error using matPutVariable on line %d\n", __FILE__, __LINE__);
-//		  return(EXIT_FAILURE);
-//	  }
-	  
-//	  status = matPutVariableAsGlobal(pmat, "GlobalDouble", pa2);
-//	  if (status != 0) {
-//		  printf("Error using matPutVariableAsGlobal\n");
-//		  return(EXIT_FAILURE);
-//	  }
-	  
-//	  status = matPutVariable(pmat, "LocalString", pa3);
-//	  if (status != 0) {
-//		  printf("%s :  Error using matPutVariable on line %d\n", __FILE__, __LINE__);
-//		  return(EXIT_FAILURE);
-//	  }
-	  
-//	  /*
-//	   * Ooops! we need to copy data before writing the array.  (Well,
-//	   * ok, this was really intentional.) This demonstrates that
-//	   * matPutVariable will overwrite an existing array in a MAT-file.
-//	   */
-//	  memcpy((void *)(mxGetPr(pa1)), (void *)data, sizeof(data));
-//	  status = matPutVariable(pmat, "LocalDouble", pa1);
-//	  if (status != 0) {
-//		  printf("%s :  Error using matPutVariable on line %d\n", __FILE__, __LINE__);
-//		  return(EXIT_FAILURE);
-//	  }
-	  
-//	  /* clean up */
-//	  mxDestroyArray(pa1);
-//	  mxDestroyArray(pa2);
-//	  mxDestroyArray(pa3);
-	
-//	  if (matClose(pmat) != 0) {
-//		printf("Error closing file %s\n",file);
-//		return(EXIT_FAILURE);
-//	  }
-	
-//	  /*
-//	   * Re-open file and verify its contents with matGetVariable
-//	   */
-//	  pmat = matOpen(file, "r");
-//	  if (pmat == NULL) {
-//		printf("Error reopening file %s\n", file);
-//		return(EXIT_FAILURE);
-//	  }
-	
-//	  /*
-//	   * Read in each array we just wrote
-//	   */
-//	  pa1 = matGetVariable(pmat, "LocalDouble");
-//	  if (pa1 == NULL) {
-//		printf("Error reading existing matrix LocalDouble\n");
-//		return(EXIT_FAILURE);
-//	  }
-//	  if (mxGetNumberOfDimensions(pa1) != 2) {
-//		printf("Error saving matrix: result does not have two dimensions\n");
-//		return(EXIT_FAILURE);
-//	  }
-	
-//	  pa2 = matGetVariable(pmat, "GlobalDouble");
-//	  if (pa2 == NULL) {
-//		printf("Error reading existing matrix GlobalDouble\n");
-//		return(EXIT_FAILURE);
-//	  }
-//	  if (!(mxIsFromGlobalWS(pa2))) {
-//		printf("Error saving global matrix: result is not global\n");
-//		return(EXIT_FAILURE);
-//	  }
-	
-//	  pa3 = matGetVariable(pmat, "LocalString");
-//	  if (pa3 == NULL) {
-//		printf("Error reading existing matrix LocalString\n");
-//		return(EXIT_FAILURE);
-//	  }
-	  
-//	  status = mxGetString(pa3, str, sizeof(str));
-//	  if(status != 0) {
-//		  printf("Not enough space. String is truncated.");
-//		  return(EXIT_FAILURE);
-//	  }
-//	  if (strcmp(str, "MATLAB: the language of technical computing")) {
-//		printf("Error saving string: result has incorrect contents\n");
-//		return(EXIT_FAILURE);
-//	  }
-	
-//	  /* clean up before exit */
-//	  mxDestroyArray(pa1);
-//	  mxDestroyArray(pa2);
-//	  mxDestroyArray(pa3);
-	
-//	  if (matClose(pmat) != 0) {
-//		printf("Error closing file %s\n",file);
-//		return(EXIT_FAILURE);
-//	  }
-//	  printf("Done\n");
-//	  return(EXIT_SUCCESS);
-
-    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
+int MainWindow::pythonTest() {
+    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs, *arglist;
 //  char *python_source, *function_name;
     char python_source[] = "py_function";
-    char function_name[] = "multiply";
-    wchar_t path[] = L"../MATLAB/";
-    int args[] = {5, 1};
 
-//       if (argc < 3)
-//       {
-//           printf("Usage: exe_name python_source function_name\n");
-//           return 1;
-//       }
+    //multiply - basic pass arguments test.  2 numbers, multiplies them together
+    //mult_array - takes one array, multiplies all contents together
+    //string_test - takes one string, returns "Hello " concat with the string
+    //mult_array_2d - takes 2d array, no return just prints
+    //play - takes 3 2d arrays (starts, durs, notes) + filename(string)
+    char function_name[] = "play";
 
-       // Initialize the Python Interpreter
-    Py_Initialize();
+//    wchar_t path[] = L"../OpenSymphonyPython/";
+    int args[] = {5, 3};
+    int args1[][2] = {{2, 3}, {5, 3}};
+    char str[] = "World!";
 
-    PySys_SetPath(path);
+    // Initialize the Python Interpreter
+//    Py_Initialize();
+    //numpy
+//    if(numpy_initialized != 0) {
+//        numpy_initialized = init_numpy();
+//    }
+
+//    PySys_SetPath(path);
 
     // Build the name object
     pName = PyUnicode_FromString(python_source);  //python_source
 
     // Load the module object
     pModule = PyImport_Import(pName);
+//    pModule = PyImport_ImportModule(python_source);
+    if(!pModule)
+    {
+        PyErr_Print();
+        return 1;
+    }
 
     // pDict is a borrowed reference
     pDict = PyModule_GetDict(pModule);
+    if(!pDict)
+    {
+        PyErr_Print();
+        return 1;
+    }
 
     // pFunc is also a borrowed reference
     pFunc = PyDict_GetItemString(pDict, function_name);  //function_name
-
+    if(!pFunc)
+    {
+        PyErr_Print();
+        return 1;
+    }
 
     if (PyCallable_Check(pFunc))
     {
         // Prepare the argument list for the call
+        //multiply
+//        pArgs = PyTuple_New(2);
 
-        pArgs = PyTuple_New(2);
+//        for (int i = 0; i < 2; i++)
+//        {
+//            pValue = PyLong_FromLong(args[i]);
+//            if (!pValue)
+//            {
+//                PyErr_Print();
+//                return 1;
+//            }
 
-        for (int i = 0; i < 2; i++)
+//            PyTuple_SetItem(pArgs, i, pValue);
+//        }
+
+//        pArgs = PyTuple_New(1);
+
+        //mult_array
+//        pArgs = makelist(args, 2);
+
+        //mult_array2d
+//        npy_intp dims[2] = {2, 2};
+//        PyTuple_SetItem(pArgs, 0, PyArray_SimpleNewFromData(2, dims, PyArray_LONG, *args1));
+
+//        PyTuple_SetItem(pArgs, 0, arglist);
+
+        //string_test
+//        pValue = PyUnicode_FromString(str);
+//        PyTuple_SetItem(pArgs, 0, pValue);
+
+//        arglist = Py_BuildValue("(O)", pArgs);
+
+        //play
+        int notes[][3] = {{36, 40, 43}, {48, 52, 55}};
+        float starts[][3] = {{0, 10, 20}, {0, 10, 20}};
+        float durs[][3] = {{30, 20, 10}, {30, 20, 10}};
+        char file[] = "../OpenSymphonyPython/wavFiles/testc0.wav";
+
+        pArgs = PyTuple_New(4);
+        npy_intp dims[2] = {2, 3};
+        PyTuple_SetItem(pArgs, 0, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, *starts));
+        PyTuple_SetItem(pArgs, 1, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, *durs));
+        PyTuple_SetItem(pArgs, 2, PyArray_SimpleNewFromData(2, dims, PyArray_LONG, *notes));
+        PyTuple_SetItem(pArgs, 3, PyUnicode_FromString(file));
+
+        if(!pArgs)
         {
-            pValue = PyLong_FromLong(args[i]);
-            if (!pValue)
-            {
-                PyErr_Print();
-                return 1;
-            }
-
-            PyTuple_SetItem(pArgs, i, pValue);
+            PyErr_Print();
+            return 1;
         }
+        qDebug() << "Pre py func call";
 
+//        pValue = PyObject_CallObject(pFunc, arglist);
 
         pValue = PyObject_CallObject(pFunc, pArgs);
 
         if (pArgs != NULL)
         {
-            Py_DECREF(pArgs);
+//            Py_DECREF(pArgs);
+        }
+        if (arglist != NULL)
+        {
+//            Py_DECREF(arglist);
         }
 
     } else
@@ -476,15 +450,30 @@ int MainWindow::aFunction() {
         PyErr_Print();
     }
 
-    //qDebug() << PyUnicode_AsUTF8(pValue);  //String
-    qDebug() << PyLong_AsLong(pValue);  //Long
+    if(pValue != NULL) {
+//        qDebug() << "Py return value: " << PyUnicode_AsUTF8(pValue);  //String
+        qDebug() << "Py return value: " << PyLong_AsLong(pValue);  //Long
+//        Py_DECREF(pValue);
+    }
 
     // Clean up
-    Py_DECREF(pModule);
-    Py_DECREF(pName);
+//    Py_DECREF(pModule);
+//    Py_DECREF(pName);
+//    Py_DECREF(pFunc);
+//    Py_DECREF(pDict);
 
+
+    qDebug() << "Pre finalize";
     // Finish the Python Interpreter
-    Py_Finalize();
+//    Py_FinalizeEx();
+
+    qDebug() << "End of py func call";
     return 0;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    //Python cleanup?
+    qDebug() << "Closing";
+    Py_Finalize();
+}

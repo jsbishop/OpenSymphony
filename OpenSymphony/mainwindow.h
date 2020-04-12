@@ -4,8 +4,16 @@
 #include <QMainWindow>
 #include <QObject>
 #include <QTableWidget>
+
+#pragma push_macro("slots")
+#undef slots
+#include <Python.h>
+#pragma pop_macro("slots")
+
 #include "track.h"
 #include "project.h"
+
+#include "instrumentbank.h"
 
 namespace Ui {
 	class MainWindow;
@@ -37,10 +45,15 @@ class MainWindow : public QMainWindow
 		void cellChecked(int row, int col);
 		void cellUnchecked(int row, int col);
 		
-		void callFevalgcd();
-		int aFunction();
+        int pythonTest();
+        PyObject *makelist(int array[], size_t size);
+        int init_numpy();
 		
 		void editTrackSamples();
+
+        void closeEvent(QCloseEvent *event);
+
+        void initializeInstrumentBank();
 		
 		
 	private:
@@ -49,6 +62,8 @@ class MainWindow : public QMainWindow
 		Project song;
 		
 		QVector<Track> tracks; //this will store the information for each of the tracks, including maybe the actual notes
+
+        InstrumentBank iBank;
 };
 
 //class GridBox : public QItemDelegate {
