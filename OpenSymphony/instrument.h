@@ -6,7 +6,7 @@
 class Instrument {
     private:
         char *name;
-        float *harmonics;
+        float *harmonics; // length 9
 
     public:
         Instrument(char *name, float *harmonics);

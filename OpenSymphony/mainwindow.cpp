@@ -36,9 +36,6 @@ int MainWindow::init_numpy(){
                      "C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/;"
                      "C:/Users/amjas/AppData/Local/Programs/Python/Python38/DLLs";
     PySys_SetPath(path);
-//    wchar_t pathSciPy[] = L"C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/site-packages";
-//    wchar_t pathSciPy[] = L"../Lib/site-packages";
-//    PySys_SetPath(pathSciPy);
     return 0;
 }
 
@@ -95,11 +92,11 @@ void MainWindow::initializeInstrumentBank() {
     iBank.addInstrument(nameClarinet, harmonicsClarinet);
 
     char nameGuitar[] = "guitar";
-    float harmonicsGuitar[] = {0.8000, 0.5440, 1.0000, 0.8800, 0.8800, 0.8000, 0, 0.0400, 0.1600, 0.6000};
+    float harmonicsGuitar[] = {0.8000, 0.5440, 1.0000, 0.8800, 0.8800, 0.8000, 0, 0.0400, 0.1600};
     iBank.addInstrument(nameGuitar, harmonicsGuitar);
 
     char nameHorn[] = "horn";
-    float harmonicsHorn[] = {1, .39, .225, .2, .3, .25, .3, .25, .2, .1, .05};
+    float harmonicsHorn[] = {1, .39, .225, .2, .3, .25, .3, .25, .2};
     iBank.addInstrument(nameHorn, harmonicsHorn);
 
     char namePiano[] = "piano";
@@ -469,6 +466,94 @@ int MainWindow::pythonTest() {
 
     qDebug() << "End of py func call";
     return 0;
+}
+
+/*writeWav
+ * pulse = 1/16th note.
+ * startPulses = 2d array of pulse values when the notes start for each voice
+ * durations = 2d array containing durations of every note for each voice, measured in pulses
+ * noteNumbers = 2d array containing the noteNumbers for each voice.
+ * Resource: https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
+ * use the piano key number
+ * instrumentHarmonics = array with instrument harmonics.  Should be length 9.
+ * filename = desired name of file.  Do not include path or .wav extension.
+ * tempo
+ * number of voices
+ * number of notes - must be uniform for every voice!  Sorry.  Can't send 2D arrays that aren't uniform row length.
+ * Suggested hack is to have 0 duration notes to fill space.  Note, a voice can play multiple notes simultaneously.
+ * Find max number of notes among all voices
+ * Fill the rest of the voices with 0 duration notes until equal. Start pulse and note number won't matter
+ * Will return 0 if it worked, 1 if something went wrong that doesn't crash it
+ */
+int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonics, char *filename, double tempo, int numVoices, int numNotes)
+{
+    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs, *arglist;
+    char python_source[] = "openSymphonyPython";
+    char function_name[] = "writeWav";
+
+    // Build the name object
+    pName = PyUnicode_FromString(python_source);  //python_source
+
+    // Load the module object
+    pModule = PyImport_Import(pName);
+    if(!pModule)
+    {
+        PyErr_Print();
+        return 1;
+    }
+
+    // pDict is a borrowed reference
+    pDict = PyModule_GetDict(pModule);
+    if(!pDict)
+    {
+        PyErr_Print();
+        return 1;
+    }
+
+    // pFunc is also a borrowed reference
+    pFunc = PyDict_GetItemString(pDict, function_name);  //function_name
+    if(!pFunc)
+    {
+        PyErr_Print();
+        return 1;
+    }
+
+    if (PyCallable_Check(pFunc))
+    {
+        //Create and fill tuple to pass as argument to python function
+        //starts, durs, notes, harmonics, filename, tempo
+        //Can add constant volume per voice
+        pArgs = PyTuple_New(6);
+        npy_intp dims[2] = {numVoices, numNotes};
+        PyTuple_SetItem(pArgs, 0, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, startPulses));
+        PyTuple_SetItem(pArgs, 1, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, durations));
+        PyTuple_SetItem(pArgs, 2, PyArray_SimpleNewFromData(2, dims, PyArray_LONG, noteNumbers));
+        dims[1] = 9;
+        PyTuple_SetItem(pArgs, 3, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, instrumentHarmonics));
+        PyTuple_SetItem(pArgs, 4, PyUnicode_FromString(filename));
+        PyTuple_SetItem(pArgs, 5, PyFloat_FromDouble(tempo));
+
+        if(!pArgs)
+        {
+            PyErr_Print();
+            return 1;
+        }
+
+        pValue = PyObject_CallObject(pFunc, pArgs);
+        if(!pValue)
+        {
+            PyErr_Print();
+            return 1;
+        }
+
+        int retVal = PyLong_AsLong(pValue);
+
+        return retVal;
+    } else
+    {
+        PyErr_Print();
+        return 1;
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
