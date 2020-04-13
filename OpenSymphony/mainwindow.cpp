@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <vector>
+#include <string>
 
 #include <iostream>
 #include <QCheckBox>
@@ -57,8 +58,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	
 	this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
-//    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(callFevalgcd()));
-    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTest()));
+    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testWriteWav()));
+//    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTest()));
 	
 	this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
 	
@@ -69,39 +70,42 @@ MainWindow::MainWindow(QWidget *parent) :
     //initialize python
     numpy_initialized = init_numpy();
 
-    initializeInstrumentBank();
+//    initializeInstrumentBank();
 
 
 }
 
 void MainWindow::initializeInstrumentBank() {
+    qDebug() << "initializing bank";
     float harmonicsTrumpet[] = {0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020};
-    char nameTrumpet[] = "trumpet";
-    iBank.addInstrument(nameTrumpet, harmonicsTrumpet);
-
-    char nameFlute[] = "flute";
+    std::string name = "trumpet";
+    iBank.addInstrument(name, harmonicsTrumpet);
+    qDebug() << "trumpet added";
+    name = "flute";
     float harmonicsFlute[] = {0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0};
-    iBank.addInstrument(nameFlute, harmonicsFlute);
+    iBank.addInstrument(name, harmonicsFlute);
 
-    char nameOboe[] = "oboe";
+    name = "oboe";
     float harmonicsOboe[] = {0.4762, 0.4524, 1.0000, 0.0952, 0.1000, 0.1048, 0.2619, 0.1429, 0.0952};
-    iBank.addInstrument(nameOboe, harmonicsOboe);
+    iBank.addInstrument(name, harmonicsOboe);
 
-    char nameClarinet[] = "clarinet";
+    name = "clarinet";
     float harmonicsClarinet[] = {1, .275, .225, .1, .3, .2, .1, 0, 0};
-    iBank.addInstrument(nameClarinet, harmonicsClarinet);
+    iBank.addInstrument(name, harmonicsClarinet);
 
-    char nameGuitar[] = "guitar";
+    name = "guitar";
     float harmonicsGuitar[] = {0.8000, 0.5440, 1.0000, 0.8800, 0.8800, 0.8000, 0, 0.0400, 0.1600};
-    iBank.addInstrument(nameGuitar, harmonicsGuitar);
+    iBank.addInstrument(name, harmonicsGuitar);
 
-    char nameHorn[] = "horn";
+    name = "horn";
     float harmonicsHorn[] = {1, .39, .225, .2, .3, .25, .3, .25, .2};
-    iBank.addInstrument(nameHorn, harmonicsHorn);
+    iBank.addInstrument(name, harmonicsHorn);
 
-    char namePiano[] = "piano";
+    name = "piano";
     float harmonicsPiano[] = {1, .1, .325, .5, .4, .4, 0, .25, 0};
-    iBank.addInstrument(namePiano, harmonicsPiano);
+    iBank.addInstrument(name, harmonicsPiano);
+
+    qDebug() << "Base number of instruments: " << iBank.getNumInst();
 }
 
 MainWindow::~MainWindow()
@@ -487,7 +491,7 @@ int MainWindow::pythonTest() {
  */
 int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonics, char *filename, double tempo, int numVoices, int numNotes)
 {
-    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs, *arglist;
+    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
     char python_source[] = "openSymphonyPython";
     char function_name[] = "writeWav";
 
@@ -525,11 +529,11 @@ int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbe
         //Can add constant volume per voice
         pArgs = PyTuple_New(6);
         npy_intp dims[2] = {numVoices, numNotes};
-        PyTuple_SetItem(pArgs, 0, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, startPulses));
-        PyTuple_SetItem(pArgs, 1, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, durations));
-        PyTuple_SetItem(pArgs, 2, PyArray_SimpleNewFromData(2, dims, PyArray_LONG, noteNumbers));
+        PyTuple_SetItem(pArgs, 0, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, *startPulses));
+        PyTuple_SetItem(pArgs, 1, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, *durations));
+        PyTuple_SetItem(pArgs, 2, PyArray_SimpleNewFromData(2, dims, PyArray_LONG, *noteNumbers));
         dims[1] = 9;
-        PyTuple_SetItem(pArgs, 3, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, instrumentHarmonics));
+        PyTuple_SetItem(pArgs, 3, PyArray_SimpleNewFromData(2, dims, PyArray_FLOAT, *instrumentHarmonics));
         PyTuple_SetItem(pArgs, 4, PyUnicode_FromString(filename));
         PyTuple_SetItem(pArgs, 5, PyFloat_FromDouble(tempo));
 
@@ -539,6 +543,7 @@ int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbe
             return 1;
         }
 
+        qDebug() << "about to call python function";
         pValue = PyObject_CallObject(pFunc, pArgs);
         if(!pValue)
         {
@@ -554,6 +559,54 @@ int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbe
         PyErr_Print();
         return 1;
     }
+}
+
+void MainWindow::testWriteWav()
+{
+    qDebug() << "Here0";
+    int notes[][3] = {{36, 40, 43}, {48, 52, 55}};
+    float starts[][3] = {{0, 10, 20}, {0, 10, 20}};
+    float durs[][3] = {{30, 20, 10}, {30, 20, 10}};
+    float *harmonics[2];
+    char instrument1[] = "trumpet";
+    char instrument2[] = "flute";
+//    harmonics[0] = iBank.getInstrument(instrument1)->getHarmonics();
+//    if(harmonics[0] == NULL)
+//    {
+//        qDebug() << "find trumpet failed";
+//        return;
+//    }
+//    harmonics[1] = iBank.getInstrument(instrument2)->getHarmonics();
+//    if(harmonics[1] == NULL)
+//    {
+//        qDebug() << "find flute failed";
+//        return;
+//    }
+
+    float harmonicsTrumpet[] = {0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020};
+    float harmonicsFlute[] = {0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0};
+
+    harmonics[0] = harmonicsTrumpet;
+    harmonics[1] = harmonicsFlute;
+
+    qDebug() << "Here1";
+    char file[] = "testc1";
+    int numVoices = 2;
+    int numNotes = 3;
+    double tempo = 120;
+
+    float *start_p[2], *dur_p[2];
+    int *note_p[2];
+    for(int i=0; i<2; i++)
+    {
+        start_p[i] = starts[i];
+        dur_p[i] = durs[i];
+        note_p[i] = notes[i];
+    }
+
+    qDebug() << "about to write to file";
+    writeWav(start_p, dur_p, note_p, harmonics, file, tempo, numVoices, numNotes);
+    qDebug() << "Wrote to file";
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

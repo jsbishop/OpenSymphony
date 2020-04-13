@@ -59,3 +59,15 @@ def writeWav(starts, durs, notes, harmonics, filename, tempo=120):
 
     return 0
 
+
+# testing function
+if __name__ == '__main__':
+    notes = [[36, 40, 43], [48, 52, 55]]
+    start = [[0, 10, 20], [0, 10, 20]]
+    dur = [[30, 20, 10], [30, 20, 10]]
+    Ak = [[0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0],
+          [0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020]]
+    file = "testFromPy"
+
+    writeWav(start, dur, notes, Ak, file)
+

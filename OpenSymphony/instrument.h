@@ -3,12 +3,16 @@
 
 #endif // INSTRUMENT_H
 
+#include<string>
+
 class Instrument {
     private:
-        char *name;
-        float *harmonics; // length 9
+        std::string name;
+        float harmonics[9];
 
     public:
-        Instrument(char *name, float *harmonics);
+        Instrument(std::string name, float *harmonics);
+        std::string getName();
+        float *getHarmonics();
 
 };

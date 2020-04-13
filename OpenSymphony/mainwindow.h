@@ -49,7 +49,8 @@ class MainWindow : public QMainWindow
         PyObject *makelist(int array[], size_t size);
         int init_numpy();
         int writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonics, char *filename, double tempo, int numVoices, int numNotes);
-		
+        void testWriteWav();
+
 		void editTrackSamples();
 
         void closeEvent(QCloseEvent *event);
