@@ -11,6 +11,7 @@ class Instrument {
         float harmonics[9];
 
     public:
+        Instrument();
         Instrument(std::string name, float *harmonics);
         std::string getName();
         float *getHarmonics();

@@ -14,7 +14,8 @@ class InstrumentBank
         int getNumInst();
 
     private:
-        Instrument *bank = (Instrument*) malloc(100*sizeof(Instrument));
+        static const int MAX_INSTRUMENTS = 50;
+        Instrument *bank;
         int numInst;
 };
 
