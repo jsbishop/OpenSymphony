@@ -48,8 +48,11 @@ class MainWindow : public QMainWindow
         int pythonTest();
         PyObject *makelist(int array[], size_t size);
         int init_numpy();
-        int writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonics, char *filename, double tempo, int numVoices, int numNotes);
+        int writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonicsA, float **instrumentHarmonicsB, char *filename, double tempo, int numVoices, int numNotes);
         void testWriteWav();
+        void pythonTestArray();
+        float **getFourier(char *filename);
+        void testFourier();
 
 		void editTrackSamples();
 

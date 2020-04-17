@@ -6,13 +6,14 @@ Instrument::Instrument()
     name = "";
 }
 
-Instrument::Instrument(std::string name, float harmonics[9])
+Instrument::Instrument(std::string name, float harmonicsA[9], float harmonicsB[9])
 {
 //    qDebug() << "in instrument constructor";
     this->name = name;
     for(int i=0; i<9; i++)
     {
-        this->harmonics[i] = harmonics[i];
+        this->harmonicsA[i] = harmonicsA[i];
+        this->harmonicsB[i] = harmonicsB[i];
     }
 //    qDebug() << "exiting constructor";
 }
@@ -22,7 +23,12 @@ std::string Instrument::getName()
     return name;
 }
 
-float *Instrument::getHarmonics()
+float *Instrument::getHarmonicsA()
 {
-    return harmonics;
+    return harmonicsA;
+}
+
+float *Instrument::getHarmonicsB()
+{
+    return harmonicsB;
 }

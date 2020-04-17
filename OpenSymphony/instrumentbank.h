@@ -9,7 +9,7 @@ class InstrumentBank
 {
     public:
         InstrumentBank();
-        void addInstrument(std::string name, float *harmonics);
+        void addInstrument(std::string name, float *harmonicsA, float *harmonicsB);
         Instrument *getInstrument(std::string name);
         int getNumInst();
 

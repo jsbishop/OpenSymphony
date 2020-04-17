@@ -11,10 +11,10 @@ InstrumentBank::InstrumentBank()
 //    std::fill(bank, bank+MAX_INSTRUMENTS, NULL);
 }
 
-void InstrumentBank::addInstrument(std::string name, float harmonics[9])
+void InstrumentBank::addInstrument(std::string name, float harmonicsA[9], float harmonicsB[9])
 {
 //    qDebug() << "in add instrument";
-    Instrument newI (name, harmonics);
+    Instrument newI (name, harmonicsA, harmonicsB);
 //    qDebug() << "instrument constructed";
 //    qDebug() << newI.getName().c_str();
     try {

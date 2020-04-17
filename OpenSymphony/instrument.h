@@ -8,12 +8,14 @@
 class Instrument {
     private:
         std::string name;
-        float harmonics[9];
+        float harmonicsA[9];
+        float harmonicsB[9];
 
     public:
         Instrument();
-        Instrument(std::string name, float *harmonics);
+        Instrument(std::string name, float *harmonicsA, float *harmonicsB);
         std::string getName();
-        float *getHarmonics();
+        float *getHarmonicsA();
+        float *getHarmonicsB();
 
 };

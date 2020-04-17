@@ -140,6 +140,9 @@ def play_trumpet():
     return song
 
 
+
+
+
 if __name__ == '__main__':
     # notes = [[36, 40, 43], [48, 52, 55]]
     # start = [[0, 10, 20], [0, 10, 20]]

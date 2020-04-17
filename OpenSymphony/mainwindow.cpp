@@ -58,8 +58,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	
 	this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
-    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testWriteWav()));
+    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testFourier()));
 //    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTest()));
+//    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTestArray()));
 	
 	this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
 	
@@ -77,33 +78,38 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::initializeInstrumentBank() {
     qDebug() << "initializing bank";
-    float harmonicsTrumpet[] = {0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020};
+//    float harmonicsTrumpet[] = {0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020};
     std::string name = "trumpet";
-    iBank.addInstrument(name, harmonicsTrumpet);
-//    qDebug() << "trumpet added";
-    name = "flute";
-    float harmonicsFlute[] = {0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0};
-    iBank.addInstrument(name, harmonicsFlute);
+//    iBank.addInstrument(name, harmonicsTrumpet);
+////    qDebug() << "trumpet added";
+//    name = "flute";
+//    float harmonicsFlute[] = {0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0};
+//    iBank.addInstrument(name, harmonicsFlute);
 
-    name = "oboe";
-    float harmonicsOboe[] = {0.4762, 0.4524, 1.0000, 0.0952, 0.1000, 0.1048, 0.2619, 0.1429, 0.0952};
-    iBank.addInstrument(name, harmonicsOboe);
+//    name = "oboe";
+//    float harmonicsOboe[] = {0.4762, 0.4524, 1.0000, 0.0952, 0.1000, 0.1048, 0.2619, 0.1429, 0.0952};
+//    iBank.addInstrument(name, harmonicsOboe);
 
-    name = "clarinet";
-    float harmonicsClarinet[] = {1, .275, .225, .1, .3, .2, .1, 0, 0};
-    iBank.addInstrument(name, harmonicsClarinet);
+//    name = "clarinet";
+//    float harmonicsClarinet[] = {1, .275, .225, .1, .3, .2, .1, 0, 0};
+//    iBank.addInstrument(name, harmonicsClarinet);
 
-    name = "guitar";
-    float harmonicsGuitar[] = {0.8000, 0.5440, 1.0000, 0.8800, 0.8800, 0.8000, 0, 0.0400, 0.1600};
-    iBank.addInstrument(name, harmonicsGuitar);
+//    name = "guitar";
+//    float harmonicsGuitar[] = {0.8000, 0.5440, 1.0000, 0.8800, 0.8800, 0.8000, 0, 0.0400, 0.1600};
+//    iBank.addInstrument(name, harmonicsGuitar);
 
-    name = "horn";
-    float harmonicsHorn[] = {1, .39, .225, .2, .3, .25, .3, .25, .2};
-    iBank.addInstrument(name, harmonicsHorn);
+//    name = "horn";
+//    float harmonicsHorn[] = {1, .39, .225, .2, .3, .25, .3, .25, .2};
+//    iBank.addInstrument(name, harmonicsHorn);
 
-    name = "piano";
-    float harmonicsPiano[] = {1, .1, .325, .5, .4, .4, 0, .25, 0};
-    iBank.addInstrument(name, harmonicsPiano);
+//    name = "piano";
+//    float harmonicsPiano[] = {1, .1, .325, .5, .4, .4, 0, .25, 0};
+//    iBank.addInstrument(name, harmonicsPiano);
+
+    name = "saxophone";
+    float harmonicsASax[] = {0.9896193771626298, 0.05096753581366033, 0.10013420571553104, 0.018186518134140853, 0.046093662169530494, 0.05668130679206973, -0.009909504350049543, 0.016954063175117797, 0.0756057121670712, 0.05270328057459335};
+    float harmonicsBSax[] = {0.0, -0.13183625907905278, 0.07795715628868859, 0.005465820394904325, -0.026496233507552803, 0.0064371210718658, -0.02038212454426651, -0.04710743425732519, -0.030681560459952805, 0.026831454243190986};
+    iBank.addInstrument(name, harmonicsASax, harmonicsBSax);
 
     qDebug() << "Base number of instruments: " << iBank.getNumInst();
 }
@@ -479,7 +485,7 @@ int MainWindow::pythonTest() {
  * noteNumbers = 2d array containing the noteNumbers for each voice.
  * Resource: https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
  * use the piano key number
- * instrumentHarmonics = array with instrument harmonics.  Should be length 9.
+ * instrumentHarmonics A and B = arrays with instrument harmonics.  Should be length 9.
  * filename = desired name of file.  Do not include path or .wav extension.
  * tempo
  * number of voices
@@ -489,7 +495,7 @@ int MainWindow::pythonTest() {
  * Fill the rest of the voices with 0 duration notes until equal. Start pulse and note number won't matter
  * Will return 0 if it worked, 1 if something went wrong that doesn't crash it
  */
-int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonics, char *filename, double tempo, int numVoices, int numNotes)
+int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonicsA, float **instrumentHarmonicsB, char *filename, double tempo, int numVoices, int numNotes)
 {
     PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
     char python_source[] = "openSymphonyPython";
@@ -534,8 +540,11 @@ int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbe
         int *note_p = (int*) PyArray_DATA(noteArray);
 
         dims[1] = 9;
-        PyObject *harmonicsArray = PyArray_SimpleNew(2, dims, PyArray_FLOAT);
-        float *harmonics_p = (float*) PyArray_DATA(harmonicsArray);
+        PyObject *harmonicsArrayA = PyArray_SimpleNew(2, dims, PyArray_FLOAT);
+        float *harmonicsA_p = (float*) PyArray_DATA(harmonicsArrayA);
+
+        PyObject *harmonicsArrayB = PyArray_SimpleNew(2, dims, PyArray_FLOAT);
+        float *harmonicsB_p = (float*) PyArray_DATA(harmonicsArrayB);
 
         //Copy data into contiguous memory
         for(int i=0; i<numVoices; i++)
@@ -546,21 +555,23 @@ int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbe
             dur_p += numNotes;
             memcpy(note_p, noteNumbers[i], sizeof(int) * numNotes);
             note_p += numNotes;
-            memcpy(harmonics_p, instrumentHarmonics[i], sizeof(float) * 9);
-            harmonics_p += 9;
+            memcpy(harmonicsA_p, instrumentHarmonicsA[i], sizeof(float) * 9);
+            harmonicsA_p += 9;
+            memcpy(harmonicsB_p, instrumentHarmonicsB[i], sizeof(float) * 9);
+            harmonicsB_p += 9;
         }
-
 
         //Create and fill tuple to pass as argument to python function
         //starts, durs, notes, harmonics, filename, tempo
         //Can add constant volume per voice
-        pArgs = PyTuple_New(6);
+        pArgs = PyTuple_New(7);
         PyTuple_SetItem(pArgs, 0, startArray);
         PyTuple_SetItem(pArgs, 1, durArray);
         PyTuple_SetItem(pArgs, 2, noteArray);
-        PyTuple_SetItem(pArgs, 3, harmonicsArray);
-        PyTuple_SetItem(pArgs, 4, PyUnicode_FromString(filename));
-        PyTuple_SetItem(pArgs, 5, PyFloat_FromDouble(tempo));
+        PyTuple_SetItem(pArgs, 3, harmonicsArrayA);
+        PyTuple_SetItem(pArgs, 4, harmonicsArrayB);
+        PyTuple_SetItem(pArgs, 5, PyUnicode_FromString(filename));
+        PyTuple_SetItem(pArgs, 6, PyFloat_FromDouble(tempo));
 
         if(!pArgs)
         {
@@ -586,35 +597,122 @@ int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbe
     }
 }
 
+//Use "path/to/file.wav" for argument
+//returnvalue[0] is harmonicsA, returnvalue[1] is harmonicsB
+float **MainWindow::getFourier(char *filename)
+{
+    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
+    PyArrayObject *np_ret;
+    char python_source[] = "openSymphonyPython";
+    char function_name[] = "findHarmonics";
+    double *retValue;
+    float fourier[2][9];
+
+    // Build the name object
+    pName = PyUnicode_FromString(python_source);  //python_source
+
+    // Load the module object
+    pModule = PyImport_Import(pName);
+    if(!pModule)
+    {
+        PyErr_Print();
+        return NULL;
+    }
+
+    // pDict is a borrowed reference
+    pDict = PyModule_GetDict(pModule);
+    if(!pDict)
+    {
+        PyErr_Print();
+        return NULL;
+    }
+
+    // pFunc is also a borrowed reference
+    pFunc = PyDict_GetItemString(pDict, function_name);  //function_name
+    if(!pFunc)
+    {
+        PyErr_Print();
+        return NULL;
+    }
+
+    if (PyCallable_Check(pFunc))
+    {
+        pArgs = PyTuple_New(1); // tuple with filename
+        pValue = PyUnicode_FromString(filename);
+        PyTuple_SetItem(pArgs, 0, pValue);
+        pValue = PyObject_CallObject(pFunc, pArgs);
+        if(!pValue)
+        {
+            PyErr_Print();
+            return NULL;
+        }
+        np_ret = reinterpret_cast<PyArrayObject*>(pValue);
+        retValue = reinterpret_cast<double*>(PyArray_DATA(np_ret));
+        qDebug() << "about to return values";
+        for(int i=0; i<2; i++)
+        {
+            for(int j=0; j<9; j++)
+            {
+                fourier[i][j] = (float) retValue[9*i+j];
+            }
+            qDebug() << retValue[i];
+        }
+        float *fourier_p[2];
+        for(int i=0; i<2; i++)
+        {
+            fourier_p[i] = fourier[i];
+        }
+        return fourier_p;
+
+    } else
+    {
+        PyErr_Print();
+        return NULL;
+    }
+    return NULL;
+}
+
+void MainWindow::testFourier()
+{
+    char filename[] = "../OpenSymphonyPython/wavFiles/Yamaha-V50-FluteVoice-C5.wav";
+    float **fourier = getFourier(filename);
+}
+
 void MainWindow::testWriteWav()
 {
-    int notes[][3] = {{40, 44, 47}, {52, 56, 59}};
+    int notes[][3] = {{36, 40, 43}, {48, 52, 55}};
     float starts[][3] = {{0, 10, 20}, {0, 10, 20}};
     float durs[][3] = {{30, 20, 10}, {30, 20, 10}};
-    float *harmonics[2];
-    char instrument1[] = "trumpet";
+    float *harmonicsA[2];
+    float *harmonicsB[2];
+    char instrument1[] = "saxophone";
     char instrument2[] = "flute";
-    harmonics[0] = iBank.getInstrument(instrument1)->getHarmonics();
-    if(harmonics[0] == NULL)
+    Instrument *sax = iBank.getInstrument(instrument1);
+    harmonicsA[0] = sax->getHarmonicsA();
+    harmonicsB[0] = sax->getHarmonicsB();
+    harmonicsA[1] = sax->getHarmonicsA();
+    harmonicsB[1] = sax->getHarmonicsB();
+    if(harmonicsA[0] == NULL)
     {
         qDebug() << "find trumpet failed";
         return;
     }
-    harmonics[1] = iBank.getInstrument(instrument2)->getHarmonics();
-    if(harmonics[1] == NULL)
+//    harmonicsA[1] = iBank.getInstrument(instrument2)->getHarmonicsA();
+    if(harmonicsA[1] == NULL)
     {
         qDebug() << "find flute failed";
         return;
     }
 
-    qDebug() << harmonics[1][0];
+    qDebug() << harmonicsA[0][0];
+    qDebug() << harmonicsB[0][0];
 //    float harmonicsTrumpet[] = {0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020};
 //    float harmonicsFlute[] = {0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0};
 
 //    harmonics[0] = harmonicsTrumpet;
 //    harmonics[1] = harmonicsFlute;
 
-    char file[] = "testc2";
+    char file[] = "testc3";
     int numVoices = 2;
     int numNotes = 3;
     double tempo = 120;
@@ -629,8 +727,65 @@ void MainWindow::testWriteWav()
     }
 
 //    qDebug() << "about to write to file";
-    writeWav(start_p, dur_p, note_p, harmonics, file, tempo, numVoices, numNotes);
+    writeWav(start_p, dur_p, note_p, harmonicsA, harmonicsB, file, tempo, numVoices, numNotes);
     qDebug() << "Wrote to file";
+}
+
+void MainWindow::pythonTestArray()
+{
+    PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
+    PyArrayObject *np_ret;
+    char python_source[] = "py_function";
+    char function_name[] = "retArray";
+    double *retValue;
+
+    // Build the name object
+    pName = PyUnicode_FromString(python_source);  //python_source
+
+    // Load the module object
+    pModule = PyImport_Import(pName);
+    if(!pModule)
+    {
+        PyErr_Print();
+        return;
+    }
+
+    // pDict is a borrowed reference
+    pDict = PyModule_GetDict(pModule);
+    if(!pDict)
+    {
+        PyErr_Print();
+        return;
+    }
+
+    // pFunc is also a borrowed reference
+    pFunc = PyDict_GetItemString(pDict, function_name);  //function_name
+    if(!pFunc)
+    {
+        PyErr_Print();
+        return;
+    }
+
+    if (PyCallable_Check(pFunc))
+    {
+        pArgs = NULL;
+        pValue = PyObject_CallObject(pFunc, pArgs);
+        if(!pValue)
+        {
+            PyErr_Print();
+            return;
+        }
+        np_ret = reinterpret_cast<PyArrayObject*>(pValue);
+        retValue = reinterpret_cast<double*>(PyArray_DATA(np_ret));
+        for(int i=0; i<4; i++) {
+            qDebug() << retValue[i];
+        }
+
+    } else
+    {
+        PyErr_Print();
+        return;
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

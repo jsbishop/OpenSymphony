@@ -6,6 +6,12 @@ from scipy.io import wavfile
 '''demonstrate the use of python embedding'''
 
 
+def retArray():
+    a = np.asarray([[5.5, 1.0], [2.0, 3.0]])
+    print(a)
+    return a
+
+
 def multiply(a, b):
     c = 12345*6789
     c = a*b
