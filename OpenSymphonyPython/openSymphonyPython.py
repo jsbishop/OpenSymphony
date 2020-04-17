@@ -89,7 +89,8 @@ def fourierSeries(period, N):
 
 
 def extractPeriod(data, rate):
-    maxA = max(data[len(data)//2:])
+    # maxA = max(data[len(data)//2:])
+    maxA = max(data)
     print(max(data), maxA)
     found = 0
     t_start = 0
@@ -117,13 +118,23 @@ def findHarmonics(filename):
     # path = "../OpenSymphonyPython/wavFiles/"
     # file = path + filename
     rate, data = wavfile.read(filename)
+    data = data[len(data)//2:]
     data = data * 1.0 / (abs(data).max())
     if len(data.shape) > 1:  # for stereo data, use only first channel
         data = data[:, 0]
     print(data)
     period, rate = extractPeriod(data, rate)
-    fSeries = fourierSeries(period, 9)
-    fSet = fSeries[0]/max(fSeries[0])
+    fSeries = fourierSeries(period, 8)
+    # fSet = fSeries[0]/max(fSeries[0])
+    fSeriesA = []
+    fSeriesB = []
+
+    for n, (a, b) in enumerate(fSeries):
+        fSeriesA.append(a)
+        fSeriesB.append(b)
+
+    fSeries = [fSeriesA, fSeriesB]
+    fSeries = np.asarray(fSeries)
     print(fSeries)
     return fSeries
 
@@ -261,7 +272,7 @@ if __name__ == '__main__':
     #
     # writeWav(start, dur, notes, harmonicsA, harmonicsB, file)
 
-    fSeries = findHarmonics("wavFiles/test_fourier0.wav")
+    fSeries = findHarmonics("wavFiles/Ensoniq-ZR-76-Clarinet-C5.wav")
     # print(fSeries)
 
     # song, fs = synthesizeTest()

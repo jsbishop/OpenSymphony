@@ -649,19 +649,25 @@ float **MainWindow::getFourier(char *filename)
         np_ret = reinterpret_cast<PyArrayObject*>(pValue);
         retValue = reinterpret_cast<double*>(PyArray_DATA(np_ret));
         qDebug() << "about to return values";
+//        qDebug() << retValue[0];
+//        return NULL;
+        float **fourier_p = 0;
+        fourier_p = new float*[2];
         for(int i=0; i<2; i++)
         {
+            fourier_p[i] = new float[9];
             for(int j=0; j<9; j++)
             {
-                fourier[i][j] = (float) retValue[9*i+j];
+                fourier_p[i][j] = (float) retValue[9*i+j];
+//                qDebug() << fourier[i][j];
             }
-            qDebug() << retValue[i];
+//            qDebug() << retValue[i];
         }
-        float *fourier_p[2];
-        for(int i=0; i<2; i++)
-        {
-            fourier_p[i] = fourier[i];
-        }
+
+//        for(int i=0; i<2; i++)
+//        {
+//            fourier_p[i] = fourier[i];
+//        }
         return fourier_p;
 
     } else
@@ -674,8 +680,15 @@ float **MainWindow::getFourier(char *filename)
 
 void MainWindow::testFourier()
 {
-    char filename[] = "../OpenSymphonyPython/wavFiles/Yamaha-V50-FluteVoice-C5.wav";
+    char filename[] = "../OpenSymphonyPython/wavFiles/TENORSA.wav";
     float **fourier = getFourier(filename);
+    for(int i=0; i<2; i++)
+    {
+        for(int j=0; j<9; j++)
+        {
+            qDebug() << fourier[i][j];
+        }
+    }
 }
 
 void MainWindow::testWriteWav()
