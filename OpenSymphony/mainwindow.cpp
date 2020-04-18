@@ -78,29 +78,33 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::initializeInstrumentBank() {
     qDebug() << "initializing bank";
-//    float harmonicsTrumpet[] = {0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020};
+    float harmonicsATrumpet[] = {-0.00685218, 0.05612199, 0.14330995, 0.35116207, 0.14304661, 0.09330923, 0.04869735, 0.01439044, 0.01011234};
+    float harmonicsBTrumpet[] = {0, -0.10147628, -0.27464732, -0.11459945, 0.04761091, 0.04968284, 0.06204205, 0.02730316, 0.02236463};
     std::string name = "trumpet";
-//    iBank.addInstrument(name, harmonicsTrumpet);
-////    qDebug() << "trumpet added";
-//    name = "flute";
-//    float harmonicsFlute[] = {0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0};
-//    iBank.addInstrument(name, harmonicsFlute);
+    iBank.addInstrument(name, harmonicsATrumpet, harmonicsBTrumpet);
+
+    name = "flute";
+    float harmonicsAFlute[] = {-2.69739561e-03, 1.88616648e-03, 1.23666485e-03, 1.48290188e-03, 1.97077024e-03, 1.10740578e-03, 9.65661305e-04, 1.03636680e-03, 5.07227983e-04};
+    float harmonicsBFlute[] = {0, -9.28241180e-04, -3.34647383e-04, -1.92460995e-04, 8.42807087e-05, 5.67485833e-05, -2.33652650e-04, 1.30743082e-03, 1.21543135e-03};
+    iBank.addInstrument(name, harmonicsAFlute, harmonicsBFlute);
 
 //    name = "oboe";
 //    float harmonicsOboe[] = {0.4762, 0.4524, 1.0000, 0.0952, 0.1000, 0.1048, 0.2619, 0.1429, 0.0952};
 //    iBank.addInstrument(name, harmonicsOboe);
 
-//    name = "clarinet";
-//    float harmonicsClarinet[] = {1, .275, .225, .1, .3, .2, .1, 0, 0};
-//    iBank.addInstrument(name, harmonicsClarinet);
+    name = "clarinet";
+    float harmonicsAClarinet[] = {-0.00495463, 0.62264983, 0.05649881, 0.11911196, 0.0769048,  0.01987596, 0.04918726, -0.01030753, 0.00503813};
+    float harmonicsBClarinet[] = {0, -0.15558717, -0.00952552, 0.40183322, -0.01012529, -0.02638546, -0.04298626, -0.07061608, 0.00396756};
+    iBank.addInstrument(name, harmonicsAClarinet, harmonicsBClarinet);
 
 //    name = "guitar";
 //    float harmonicsGuitar[] = {0.8000, 0.5440, 1.0000, 0.8800, 0.8800, 0.8000, 0, 0.0400, 0.1600};
 //    iBank.addInstrument(name, harmonicsGuitar);
 
-//    name = "horn";
-//    float harmonicsHorn[] = {1, .39, .225, .2, .3, .25, .3, .25, .2};
-//    iBank.addInstrument(name, harmonicsHorn);
+    name = "horn";
+    float harmonicsAHorn[] = {-0.00737609, 0.14897398, 0.2757954, 0.14180712, 0.08327578, 0.04651521, 0.0372388, 0.03654996, 0.04140227};
+    float harmonicsBHorn[] = {0, -0.07861147, -0.01587843, 0.0676121, 0.02883301, 0.01873752, 0.0073565, -0.00420913, -0.00697062};
+    iBank.addInstrument(name, harmonicsAHorn, harmonicsBHorn);
 
 //    name = "piano";
 //    float harmonicsPiano[] = {1, .1, .325, .5, .4, .4, 0, .25, 0};
@@ -110,6 +114,16 @@ void MainWindow::initializeInstrumentBank() {
     float harmonicsASax[] = {0.9896193771626298, 0.05096753581366033, 0.10013420571553104, 0.018186518134140853, 0.046093662169530494, 0.05668130679206973, -0.009909504350049543, 0.016954063175117797, 0.0756057121670712, 0.05270328057459335};
     float harmonicsBSax[] = {0.0, -0.13183625907905278, 0.07795715628868859, 0.005465820394904325, -0.026496233507552803, 0.0064371210718658, -0.02038212454426651, -0.04710743425732519, -0.030681560459952805, 0.026831454243190986};
     iBank.addInstrument(name, harmonicsASax, harmonicsBSax);
+
+    name = "violin";
+    float harmonicsAViolin[] = {-0.01898906, 0.28246865, 0.34773771, 0.01329275, 0.01234224, 0.1656276, 0.10546611, 0.00097408, 0.02409484};
+    float harmonicsBViolin[] = {0, 0.02152184, -0.0457324, 0.02897899, 0.03525851, -0.05855355, 0.01701746, 0.02169501, 0.01144296};
+    iBank.addInstrument(name, harmonicsAViolin, harmonicsBViolin);
+
+    name = "trombone";
+    float harmonicsATrombone[] = {-9.63209302e-04, -1.52543762e-02, 6.60848277e-02, -7.59366949e-02, 6.60827194e-02, 1.62116037e-01, 1.27810233e-01, 5.58277808e-02, 7.56025117e-02};
+    float harmonicsBTrombone[] = {0, -4.96430326e-02, 3.24357387e-02, -1.02082822e-01, 1.27797127e-04, -5.07751474e-02, -3.42982872e-02, -1.47231716e-02, -1.61552741e-02};
+    iBank.addInstrument(name, harmonicsATrombone, harmonicsBTrombone);
 
     qDebug() << "Base number of instruments: " << iBank.getNumInst();
 }
@@ -606,7 +620,6 @@ float **MainWindow::getFourier(char *filename)
     char python_source[] = "openSymphonyPython";
     char function_name[] = "findHarmonics";
     double *retValue;
-    float fourier[2][9];
 
     // Build the name object
     pName = PyUnicode_FromString(python_source);  //python_source
@@ -659,15 +672,10 @@ float **MainWindow::getFourier(char *filename)
             for(int j=0; j<9; j++)
             {
                 fourier_p[i][j] = (float) retValue[9*i+j];
-//                qDebug() << fourier[i][j];
+//                qDebug() << fourier_p[i][j];
             }
 //            qDebug() << retValue[i];
         }
-
-//        for(int i=0; i<2; i++)
-//        {
-//            fourier_p[i] = fourier[i];
-//        }
         return fourier_p;
 
     } else
@@ -682,13 +690,13 @@ void MainWindow::testFourier()
 {
     char filename[] = "../OpenSymphonyPython/wavFiles/TENORSA.wav";
     float **fourier = getFourier(filename);
-    for(int i=0; i<2; i++)
-    {
-        for(int j=0; j<9; j++)
-        {
-            qDebug() << fourier[i][j];
-        }
-    }
+//    for(int i=0; i<2; i++)
+//    {
+//        for(int j=0; j<9; j++)
+//        {
+//            qDebug() << fourier[i][j];
+//        }
+//    }
 }
 
 void MainWindow::testWriteWav()

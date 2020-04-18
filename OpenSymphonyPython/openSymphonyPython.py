@@ -91,7 +91,7 @@ def fourierSeries(period, N):
 def extractPeriod(data, rate):
     # maxA = max(data[len(data)//2:])
     maxA = max(data)
-    print(max(data), maxA)
+    # print(max(data), maxA)
     found = 0
     t_start = 0
     t_end = 0
@@ -103,7 +103,7 @@ def extractPeriod(data, rate):
             t_end = i
             found = 2
 
-    print(t_start, t_end)
+    # print(t_start, t_end)
     sample_start = int(t_start * rate)
     sample_end = int(t_end*rate)
     # print(sample_start, sample_end)
@@ -135,7 +135,7 @@ def findHarmonics(filename):
 
     fSeries = [fSeriesA, fSeriesB]
     fSeries = np.asarray(fSeries)
-    print(fSeries)
+    # print(fSeries)
     return fSeries
 
 
@@ -272,7 +272,7 @@ if __name__ == '__main__':
     #
     # writeWav(start, dur, notes, harmonicsA, harmonicsB, file)
 
-    fSeries = findHarmonics("wavFiles/Ensoniq-ZR-76-Clarinet-C5.wav")
+    fSeries = findHarmonics("wavFiles/tuba-sus-g2-PB-loop.wav")
     # print(fSeries)
 
     # song, fs = synthesizeTest()
