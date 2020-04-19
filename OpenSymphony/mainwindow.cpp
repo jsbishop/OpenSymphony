@@ -255,14 +255,16 @@ void MainWindow::adjustGridCheckboxes(QTableWidget *t) { //automatically fill ea
 //			qDebug() << t->itemAt(row,col)->data(Qt::DisplayRole);
 			//if (t->itemAt(row,col)->data(Qt::DisplayRole).isNull()) { //need to make sure this will actually return null when it's supposed to
 				//qb = new QCheckBox(t->itemAt(row,col));
+				t->setItem(row, col, new QTableWidgetItem);
+				
 				
 				QHBoxLayout *l = new QHBoxLayout();
-				QCheckBox *qb = new QCheckBox("");
-				QIcon defaultButtonIcon(":/images/button_default.png");
-				qb->setIcon(defaultButtonIcon);
-				qb->setStyleSheet("QCheckBox::indicator  { width:150px; height: 150px;} QCheckBox::indicator::checked {image: url(:/images/button_checked.png);}");
+				//QCheckBox *qb = new QCheckBox("");
+				//QIcon defaultButtonIcon(":/images/button_default.png");
+				//qb->setIcon(defaultButtonIcon);
+				//qb->setStyleSheet("QCheckBox::indicator  { width:150px; height: 150px;} QCheckBox::indicator::checked {image: url(:/images/button_checked.png);}");
 				//l->addWidget((new QCheckBox("")));
-				l->addWidget(qb);
+				//l->addWidget(qb);
 				
 				QWidget *w = new QWidget();
 			    w->setLayout(l);
@@ -272,6 +274,7 @@ void MainWindow::adjustGridCheckboxes(QTableWidget *t) { //automatically fill ea
 			//}
 		}
 	}
+	currentTable = t;
 }
 
 void MainWindow::adjustGridTimeSignature(int time1, int time2) { //adjust grid to match the appropriate time signature (time1/time2)
@@ -290,6 +293,8 @@ void MainWindow::adjustGridLength(int length) { //adjust grid to match the appro
 void MainWindow::cellChecked(int row, int col) { //add note to score
 	//determine current tab
 	int currentTab = this->ui->scoreTabs->currentIndex();
+	
+	currentTable->item(row,col)->setBackground(Qt::blue);
 	
 	//add note to score
 	qDebug() << "Adding note to track" << currentTab << "at position" << col << "with pitch" << row;	

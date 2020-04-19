@@ -28,7 +28,9 @@ class MainWindow : public QMainWindow
 		~MainWindow();
 		
 		Track testTrack;
-		
+		QVector<QVector<QTableWidgetItem>> tableCells; //hacky temporary solution for keeping track of cells in the grid
+		QTableWidget *currentTable; //points to the currently relevant table	
+			
 	public slots:
 		void newProject();
 		void openProject();

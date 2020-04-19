@@ -4,7 +4,7 @@
 Project::Project()
 {
 	//this->tracks = new QVector<Track>(1);
-//	this->tracks->resize(1);
+	//this->tracks->resize(1);
 }
 
 void Project::addTrack(Track newTrack) {
