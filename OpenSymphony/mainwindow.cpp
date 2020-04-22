@@ -33,9 +33,17 @@ int MainWindow::init_numpy(){
     import_array(); // PyError if not successful
     //Up to python should be the same as your python path.  After that, include the paths as shown here to site-packages, Lib, and DLLs with a ; between each.
     wchar_t path[] = L"../OpenSymphonyPython/;"
-                     "C:/Users/jonat/AppData/Local/Programs/Python/Python38/Lib/site-packages/;"
+                        "C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/site-packages/;"
+                        "C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/;"
+                        "C:/Users/amjas/AppData/Local/Programs/Python/Python38/DLLs;"
+                        "C:/Users/jonat/AppData/Local/Programs/Python/Python38/Lib/site-packages/;"
+                        "C:/Users/jonat/AppData/Local/Programs/Python/Python38/Lib/;"
+                        "C:/Users/jonat/AppData/Local/Programs/Python/Python38/DLLs";
+
+    //Jonathan paths
+    /*"C:/Users/jonat/AppData/Local/Programs/Python/Python38/Lib/site-packages/;"
                      "C:/Users/jonat/AppData/Local/Programs/Python/Python38/Lib/;"
-                     "C:/Users/jonat/AppData/Local/Programs/Python/Python38/DLLs";
+                     "C:/Users/jonat/AppData/Local/Programs/Python/Python38/DLLs;"*/
     PySys_SetPath(path);
     return 0;
 }
@@ -823,8 +831,11 @@ void MainWindow::addNewInstrument(char *name, char *file)
 {
     //Currently untested
     float **fourier = getFourier(file); // most of the work is done here
+    qDebug() << fourier[0][0];
     float *harmonicsA = fourier[0];
     float *harmonicsB = fourier[1];
+    qDebug() << harmonicsA[0];
+    qDebug() << harmonicsB[0];
     iBank.addInstrument(name, harmonicsA, harmonicsB);
     qDebug() << "instrument " << name << " added";
     qDebug() << iBank.getInstrument(name)->getName().c_str(); //test that it was added

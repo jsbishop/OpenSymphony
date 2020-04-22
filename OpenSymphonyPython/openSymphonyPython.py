@@ -122,7 +122,7 @@ def findHarmonics(filename):
     data = data * 1.0 / (abs(data).max())
     if len(data.shape) > 1:  # for stereo data, use only first channel
         data = data[:, 0]
-    print(data)
+    # print(data)
     period, rate = extractPeriod(data, rate)
     fSeries = fourierSeries(period, 8)
     # fSet = fSeries[0]/max(fSeries[0])
