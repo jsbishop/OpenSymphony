@@ -13,10 +13,10 @@ class Project
 		
 //		OSProjectFile projectFile;
 		
-		//QVector<Track> tracks;
+		QVector<Track *> tracks;
 		
 	public slots:
-		void addTrack(Track newTrack);
+		void addTrack(Track *newTrack);
 		
 		void addNote(int trackNum, int pos, int pitch);
 		void removeNote(int trackNum, int pos, int pitch);

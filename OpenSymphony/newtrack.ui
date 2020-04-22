@@ -22,15 +22,37 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>Audio Samples:</string>
+        <string>Audio Sample:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QPushButton" name="buttonBrowse">
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string/>
+        <string>Browse</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_sample">
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
        </property>
       </widget>
      </item>
@@ -70,26 +92,83 @@
      </property>
      <item>
       <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>SoundFont file: </string>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="buttonSoundfontBrowse">
-       <property name="text">
-        <string>Browse...</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QTextEdit" name="textEdit">
-       <property name="maximumSize">
+       <property name="minimumSize">
         <size>
-         <width>16777215</width>
-         <height>30</height>
+         <width>50</width>
+         <height>0</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Preset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox">
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <item>
+        <property name="text">
+         <string>(Select preset instrument)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Trumpet</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Flute</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Clarinet</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Horn</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Saxophone</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Violin</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Trombone</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
@@ -111,6 +190,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="buttonSave">
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Save</string>
        </property>
@@ -118,6 +203,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="buttonCancel">
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Cancel</string>
        </property>

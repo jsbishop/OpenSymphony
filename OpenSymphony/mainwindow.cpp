@@ -44,7 +44,7 @@ static int numpy_initialized =  -1;
 
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent),
+	QMainWindow(parent), testTrack(this),
 	ui(new Ui::MainWindow)
 {
 	qDebug("I'm here");
@@ -63,6 +63,10 @@ MainWindow::MainWindow(QWidget *parent) :
 //    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTestArray()));
 	
 	this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
+	this->connect(this->ui->actionExport_to_Audio_File, SIGNAL(triggered(bool)), this, SLOT(exportAudio()));
+	
+	//this->ui->scoreTabs->removeTab(1);	//remove the default tabs
+	//this->ui->scoreTabs->removeTab(0);
 	
 	this->testTrack.score.resize(12);
 	addTrackTab(&testTrack);
@@ -73,6 +77,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initializeInstrumentBank();
 
+
+	
 
 }
 
@@ -207,7 +213,7 @@ void MainWindow::saveProjectAs() {
 
 
 void MainWindow::createNewTrack() {
-	Track *newTrack = new Track();
+	Track *newTrack = new Track(nullptr);
 	newTrack->show();
 	qDebug("I've called newTrack()");
 	
@@ -217,6 +223,8 @@ void MainWindow::createNewTrack() {
 }
 
 void MainWindow::addTrackTab(Track *newTrack) {
+	this->song.addTrack(newTrack);
+	
 	//create a new tab widget
 	QTabWidget tempTab;
 	
@@ -286,7 +294,9 @@ void MainWindow::adjustGridTimeSignature(int time1, int time2) { //adjust grid t
 void MainWindow::adjustGridLength(int length) { //adjust grid to match the appropriate length
 	//length should denote the number of 
 	//default for now should be one cell for each beat for the length of the song
-	
+	for (int i = 0; i < this->song.tracks.length(); i++) {
+		this->song.tracks[i]->setLength(length);		
+	}
 	//later on will want to have it be multiplied by some number so that the number of cells varies depending on how much the table is zoomed in
 }
 
@@ -294,20 +304,28 @@ void MainWindow::cellChecked(int row, int col) { //add note to score
 	//determine current tab
 	int currentTab = this->ui->scoreTabs->currentIndex();
 	
+	if (currentTable->item(row,col)->background() == Qt::blue) { //call cellUnchecked if the cell was already blue
+		cellUnchecked(row, col);
+		return;
+	}
 	currentTable->item(row,col)->setBackground(Qt::blue);
 	
 	//add note to score
 	qDebug() << "Adding note to track" << currentTab << "at position" << col << "with pitch" << row;	
+	//qDebug() << "The size of tracks is " << this->song.tracks.size();
 	this->song.addNote(currentTab, col, row);
 }
 
 void MainWindow::cellUnchecked(int row, int col) { //remove note from score
+	qDebug("cellUnchecked");
 	//determine current tab
 	int currentTab = this->ui->scoreTabs->currentIndex();
 	
 	//remove note from score
 	qDebug() << "Removing note from track" << currentTab << "at position" << col << "with pitch" << row;
 	this->song.removeNote(currentTab,col,row);
+	currentTable->item(row,col)->setBackground(Qt::white);
+	
 }
 
 void MainWindow::editTrackSamples() {
@@ -315,6 +333,11 @@ void MainWindow::editTrackSamples() {
 	
 //	this->song.tracks[this->ui->scoreTabs->currentIndex()].show();
 	//this->song.tracks[this->ui->scoreTabs->currentIndex()].ui.buttonSave.show();
+	
+}
+
+void MainWindow::exportAudio() {//save to wav file
+	QString fileName = QFileDialog::getSaveFileName(this, "Save As Audio File", "", "WAV Files (*.wav)");
 	
 }
 

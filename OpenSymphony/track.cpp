@@ -1,8 +1,13 @@
 #include "track.h"
 #include "ui_newtrack.h"
 
+Track::Track() {
+	
+}
 Track::Track(QWidget *parent) : QWidget(parent), ui(new Ui::NewTrack) {
 	ui->setupUi(this);
+//	this->setModal(true);
+	
 	qDebug("created new track");
 }
 
@@ -17,11 +22,14 @@ void on_buttonDone_clicked() {
 //	emit this->sig_done(&this);	 //probably gonna complain cos it's passing a pointer instead of the value
 }
 
+void Track::setLength(int length) {
+	this->score.resize(length);
+}
+
 void Track::addNote(int pos, int pitch) {
 	if (pos >= this->score.length()) {
 		this->score.resize(pos);
 	}
-	
 	this->score[pos].pitch = pitch;
 	
 }

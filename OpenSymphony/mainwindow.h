@@ -36,6 +36,7 @@ class MainWindow : public QMainWindow
 		void openProject();
 		void saveProject();
 		void saveProjectAs();
+		void exportAudio();
 		
 		void createNewTrack();
 		void addTrackTab(Track *newTrack);
@@ -68,7 +69,7 @@ class MainWindow : public QMainWindow
 		
 		Project song;
 		
-		QVector<Track> tracks; //this will store the information for each of the tracks, including maybe the actual notes
+		QVector<Track *> tracks; //this will store the information for each of the tracks, including maybe the actual notes
 
         InstrumentBank iBank;
 };

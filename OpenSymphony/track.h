@@ -25,8 +25,10 @@ class Track : public QWidget
 		Q_OBJECT
 		
 	public:
+		Track();
 		explicit Track(QWidget *parent = nullptr);
 		~Track();
+		void setLength(int length);
 		void addNote(int pos, int pitch);
 		void removeNote(int pos, int pitch);
 		
