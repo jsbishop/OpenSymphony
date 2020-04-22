@@ -781,6 +781,21 @@ float **MainWindow::getFourier(char *filename)
     return NULL;
 }
 
+/*Name is the desired name of the instrument provided by the user
+ * File is the wav file from which an instrument will be made.
+ * Should look like "path/to/file.wav" where the path is a relative path from this directory (OpenSymphony) or an absolute path
+ */
+void MainWindow::addNewInstrument(char *name, char *file)
+{
+    //Currently untested
+    float **fourier = getFourier(file); // most of the work is done here
+    float *harmonicsA = fourier[0];
+    float *harmonicsB = fourier[1];
+    iBank.addInstrument(name, harmonicsA, harmonicsB);
+    qDebug() << "instrument " << name << " added";
+    qDebug() << iBank.getInstrument(name)->getName().c_str(); //test that it was added
+}
+
 void MainWindow::testFourier()
 {
     char filename[] = "../OpenSymphonyPython/wavFiles/TENORSA.wav";
