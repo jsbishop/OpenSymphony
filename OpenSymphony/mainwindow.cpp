@@ -33,9 +33,9 @@ int MainWindow::init_numpy(){
     import_array(); // PyError if not successful
     //Up to python should be the same as your python path.  After that, include the paths as shown here to site-packages, Lib, and DLLs with a ; between each.
     wchar_t path[] = L"../OpenSymphonyPython/;"
-                     "C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/site-packages/;"
-                     "C:/Users/amjas/AppData/Local/Programs/Python/Python38/Lib/;"
-                     "C:/Users/amjas/AppData/Local/Programs/Python/Python38/DLLs";
+                     "C:/Users/jonat/AppData/Local/Programs/Python/Python38/Lib/site-packages/;"
+                     "C:/Users/jonat/AppData/Local/Programs/Python/Python38/Lib/;"
+                     "C:/Users/jonat/AppData/Local/Programs/Python/Python38/DLLs";
     PySys_SetPath(path);
     return 0;
 }
@@ -223,6 +223,17 @@ void MainWindow::createNewTrack() {
 }
 
 void MainWindow::addTrackTab(Track *newTrack) {
+	if (!(newTrack->isPreset)) { //if it's not a preset create new instrument
+		std::string str = newTrack->instrumentName.toStdString();
+		char* trackName = new char [str.size()+1];
+		strcpy( trackName, str.c_str() );
+		
+		std::string fileName = newTrack->sampleFileName.toStdString();
+		char* fname = new char [fileName.size()+1];
+		strcpy(fname, fileName.c_str());
+		addNewInstrument(trackName, fname);
+	}
+	
 	this->song.addTrack(newTrack);
 	
 	//create a new tab widget

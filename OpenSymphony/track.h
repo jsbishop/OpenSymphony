@@ -38,6 +38,8 @@ class Track : public QWidget
 		
 		QString name;
 		QString instrumentName;
+		QString sampleFileName;
+		bool isPreset;
 		QVector<Note> score; // a structure that contains the actual notes
 				
 	signals:
@@ -45,11 +47,11 @@ class Track : public QWidget
 		
 	private:
 		Ui::NewTrack *ui;
-		bool isPreset;
 		
 	private slots:
 		void on_radioBtn_sample_toggled();
 		void on_radioBtn_preset_toggled();
+		void on_lineEdit_trackTitle_textChanged(const QString &text);		
 		void on_buttonBrowse_clicked();
 		void on_presetSelection_activated(int index);		
 		void on_buttonSave_clicked();

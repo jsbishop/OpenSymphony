@@ -68,23 +68,36 @@ void Track::on_radioBtn_preset_toggled() {
 	//}
 }
 
+void Track::on_lineEdit_trackTitle_textChanged(const QString &text) {
+	if (text.isEmpty()) {
+		this->ui->buttonSave->hide();
+	} 
+	else if (isPreset && this->ui->presetSelection->currentIndex() != 0) {
+		this->ui->buttonSave->show();
+	}
+	else if (!isPreset && !this->ui->lineEdit_sample->text().isEmpty()) {
+		this->ui->buttonSave->show();
+	}
+}
+
 void Track::on_buttonSave_clicked() {
-	
+	this->name = this->ui->lineEdit_trackTitle->text();	
 	
 	if (this->isPreset) {
 		//set the instrument to the preset the user chose
 		this->instrumentName = this->ui->presetSelection->currentText();
 		qDebug() << "chosen preset is" << instrumentName;
-
+		this->sampleFileName = "";
 	}
 	
 	else {
 		this->instrumentName = this->ui->lineEdit_trackTitle->text();
 		//create new instrument 
+		this->sampleFileName = this->ui->lineEdit_sample->text();
 		
 	}
 	//add track to project
-//	emit this->sig_done(&this);	 //probably gonna complain cos it's passing a pointer instead of the value
+	emit this->sig_done(this);	 //probably gonna complain cos it's passing a pointer instead of the value
 }
 
 void Track::setLength(int length) {
