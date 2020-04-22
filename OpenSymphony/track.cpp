@@ -98,6 +98,11 @@ void Track::on_buttonSave_clicked() {
 	}
 	//add track to project
 	emit this->sig_done(this);	 //probably gonna complain cos it's passing a pointer instead of the value
+	this->close();
+}
+
+void Track::on_buttonCancel_clicked() {
+	this->close();
 }
 
 void Track::setLength(int length) {

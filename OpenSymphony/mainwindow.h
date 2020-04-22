@@ -74,6 +74,8 @@ class MainWindow : public QMainWindow
 		QVector<Track *> tracks; //this will store the information for each of the tracks, including maybe the actual notes
 
         InstrumentBank iBank;
+		
+		int songLength;
 };
 
 //class GridBox : public QItemDelegate {

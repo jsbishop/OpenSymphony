@@ -55,6 +55,7 @@ class Track : public QWidget
 		void on_buttonBrowse_clicked();
 		void on_presetSelection_activated(int index);		
 		void on_buttonSave_clicked();
+		void on_buttonCancel_clicked();
 		
 		
 };

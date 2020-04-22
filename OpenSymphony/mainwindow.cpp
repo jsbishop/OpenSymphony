@@ -68,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	//this->ui->scoreTabs->removeTab(1);	//remove the default tabs
 	//this->ui->scoreTabs->removeTab(0);
 	
+	this->songLength = 48;
+	
 	this->testTrack.score.resize(12);
 	addTrackTab(&testTrack);
     //this->ui->testButton->hide();
@@ -218,8 +220,7 @@ void MainWindow::createNewTrack() {
 	qDebug("I've called newTrack()");
 	
 	//this->connect(newTrack, SIGNAL(sig_done(Track*)), this->song, SLOT(addTrack(Track*)));
-	this->connect(newTrack, SIGNAL(sig_done(Track*)), this, SLOT(addTrackTab(Track*))); 
-	
+	this->connect(newTrack, SIGNAL(sig_done(Track*)), this, SLOT(addTrackTab(Track*))); 	
 }
 
 void MainWindow::addTrackTab(Track *newTrack) {
@@ -233,7 +234,7 @@ void MainWindow::addTrackTab(Track *newTrack) {
 		strcpy(fname, fileName.c_str());
 		addNewInstrument(trackName, fname);
 	}
-	
+	newTrack->score.resize(songLength);
 	this->song.addTrack(newTrack);
 	
 	//create a new tab widget
@@ -270,7 +271,7 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	//qDebug() << "the index is" << index << "and the table is" << scoreGrid->rowCount() << "x" << scoreGrid->columnCount();
 	//adjustGridCheckboxes(scoreGrid);
 
-	int index = this->ui->scoreTabs->addTab(scoreGrid, "Alex's Custom Instrument");
+	int index = this->ui->scoreTabs->addTab(scoreGrid, newTrack->name);
 	//qDebug() << "the index is" << index << "and the table is" << scoreGrid->rowCount() << "x" << scoreGrid->columnCount();
 	adjustGridCheckboxes(scoreGrid);
 
