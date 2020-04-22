@@ -57,6 +57,8 @@ class MainWindow : public QMainWindow
         float **getFourier(char *filename);
         void testFourier();
 
+        void addNewInstrument(char *name, char *file);
+
 		void editTrackSamples();
 
         void closeEvent(QCloseEvent *event);
