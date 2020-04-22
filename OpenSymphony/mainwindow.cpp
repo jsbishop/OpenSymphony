@@ -356,8 +356,11 @@ void MainWindow::exportAudio() {//save to wav file
 	QString fileName = QFileDialog::getSaveFileName(this, "Save As Audio File", "", "WAV Files (*.wav)");
 	
 	//startpulses is an array of time positions indicating when the notes start; can be determined by looking at the score for each track
-	float **startPulses = new float[this->song.tracks.size()];
-	float **durations = new float[this->song.tracks.size()];
+	float **startPulses;
+	startPulses = new float*[this->song.tracks.size()];
+	
+	float **durations;
+	durations = new float*[this->song.tracks.size()];
 	
 	for (int i = 0; i < this->song.tracks.size(); i++) { //the second dimension should be the length of each track
 		startPulses[i] = new float[this->song.tracks[0]->score.length()];	
@@ -382,17 +385,36 @@ void MainWindow::exportAudio() {//save to wav file
 	
 	//durations gonna be hard coded as 1 for now
 	for (int i = 0; i < this->song.tracks.size(); i++) {
-		
+		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
+			if (this->song.tracks[0]->score[j].pitch == -1) {
+				durations[i][j] = -1;				
+			}
+			else {
+				durations[i][j] = 1;
+			}
+		}
 	}
 	
-	//noteNumbers will be the row numbers for each note in each track (maybe use -1 for empty cells)
+	//noteNumbers will be the pitch (row number) for each note in each track (maybe use -1 for empty cells)
 	int **noteNumbers;
+	for (int i = 0; i < this->song.tracks.size(); i++) {
+		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
+			if (this->song.tracks[0]->score[j].pitch == -1) {
+				noteNumbers[i][j] = -1;				
+			}
+			else {
+				noteNumbers[i][j] = this->song.tracks[0]->score[j].pitch;
+			}
+		}		
+	}
+	
 	//instrumentHarmonicsA/B are hard-coded for the preset instruments, and then what about the custom ones?
 	float **instrumentHarmonicsA;
 	float **instrumentHarmonicsB;
 	//fileName needs to have the extension removed and be converted to char *
 	std::string str = fileName.toStdString();
-	const char* p = str.c_str();
+	char* p = new char [str.size()+1];
+	strcpy( p, str.c_str() );
 	
 	//tempo is in bpm, right? Gonna hard code that to 120 for now
 	double tempo = 120;

@@ -17,11 +17,11 @@
    <iconset resource="resources.qrc">
     <normaloff>:/images/OpenSymphony_Icon.png</normaloff>:/images/OpenSymphony_Icon.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,10,0,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,0">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QRadioButton" name="radioBtn_sample">
        <property name="font">
         <font>
          <family>Segoe UI Semilight</family>
@@ -59,21 +59,36 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="AudioSamplesTable">
-     <column>
-      <property name="text">
-       <string>Audio Samples:</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>To be used for these notes:</string>
-      </property>
-     </column>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <family>Segoe UI Semilight</family>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>-OR-</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -91,23 +106,17 @@
       <enum>QLayout::SetMinimumSize</enum>
      </property>
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QRadioButton" name="radioBtn_preset">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
-         <width>50</width>
+         <width>0</width>
          <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>150</width>
-         <height>16777215</height>
         </size>
        </property>
        <property name="font">
@@ -117,12 +126,12 @@
         </font>
        </property>
        <property name="text">
-        <string>Preset</string>
+        <string>Preset:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="presetSelection">
        <property name="font">
         <font>
          <family>Segoe UI Semilight</family>
@@ -170,6 +179,29 @@
         </property>
        </item>
       </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>Segoe UI Semilight</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Track name:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_trackTitle"/>
      </item>
     </layout>
    </item>

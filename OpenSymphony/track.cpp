@@ -1,5 +1,8 @@
 #include "track.h"
 #include "ui_newtrack.h"
+#include <QObject>
+#include <QFileDialog>
+#include <QDebug>
 
 Track::Track() {
 	
@@ -9,6 +12,8 @@ Track::Track(QWidget *parent) : QWidget(parent), ui(new Ui::NewTrack) {
 //	this->setModal(true);
 	
 	qDebug("created new track");
+	this->isPreset = true;
+	this->ui->buttonSave->hide();
 }
 
 Track::~Track()
@@ -16,8 +21,68 @@ Track::~Track()
 	delete ui;
 }
 
+void Track::on_buttonBrowse_clicked() {
+	qDebug("browse");
+	QString fileName = QFileDialog::getOpenFileName(this, "Select Audio Clip", "", "WAV Files (*.wav)");
+	if (fileName.isEmpty()) {	
+		return;
+	}
+	
+	this->ui->radioBtn_sample->setChecked(true);
+	
+	this->ui->lineEdit_sample->setText(fileName);
+	
+	if (!this->ui->lineEdit_trackTitle->text().isEmpty()) {
+		this->ui->buttonSave->show();			
+	}
+}
 
-void on_buttonDone_clicked() {
+void Track::on_presetSelection_activated(int index) {
+	if (index != 0) {
+		this->ui->radioBtn_preset->setChecked(true);
+		
+		if (!this->ui->lineEdit_trackTitle->text().isEmpty()) {
+			this->ui->buttonSave->show();			
+		}
+	}
+	else {
+		this->ui->buttonSave->hide();
+	}
+}
+
+void Track::on_radioBtn_sample_toggled() {
+	if (this->ui->radioBtn_sample->isChecked()) {
+		this->isPreset = false;
+		qDebug("isPreset is now false");
+		
+	}
+	else {
+		this->isPreset = true;
+		qDebug("isPreset is now true");
+	}
+}
+
+void Track::on_radioBtn_preset_toggled() {
+	//if (this->ui->radioBtn_sample->isChecked()) {
+	//	this->isPreset = false;
+	//}
+}
+
+void Track::on_buttonSave_clicked() {
+	
+	
+	if (this->isPreset) {
+		//set the instrument to the preset the user chose
+		this->instrumentName = this->ui->presetSelection->currentText();
+		qDebug() << "chosen preset is" << instrumentName;
+
+	}
+	
+	else {
+		this->instrumentName = this->ui->lineEdit_trackTitle->text();
+		//create new instrument 
+		
+	}
 	//add track to project
 //	emit this->sig_done(&this);	 //probably gonna complain cos it's passing a pointer instead of the value
 }

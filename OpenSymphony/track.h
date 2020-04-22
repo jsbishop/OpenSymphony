@@ -28,11 +28,16 @@ class Track : public QWidget
 		Track();
 		explicit Track(QWidget *parent = nullptr);
 		~Track();
+		
+
+		
+		
 		void setLength(int length);
 		void addNote(int pos, int pitch);
 		void removeNote(int pos, int pitch);
 		
 		QString name;
+		QString instrumentName;
 		QVector<Note> score; // a structure that contains the actual notes
 				
 	signals:
@@ -40,6 +45,15 @@ class Track : public QWidget
 		
 	private:
 		Ui::NewTrack *ui;
+		bool isPreset;
+		
+	private slots:
+		void on_radioBtn_sample_toggled();
+		void on_radioBtn_preset_toggled();
+		void on_buttonBrowse_clicked();
+		void on_presetSelection_activated(int index);		
+		void on_buttonSave_clicked();
+		
 		
 };
 
