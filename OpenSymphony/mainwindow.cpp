@@ -232,7 +232,22 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	qDebug() << "score length:" << newTrack->score.length();
 	
 	QTableWidget *scoreGrid = new QTableWidget(20,newTrack->score.length(),nullptr);
-	//scoreGrid->setRowCount(20);	
+	
+	QStringList rowLabels = {"A","Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
+	
+	scoreGrid->setVerticalHeaderLabels(rowLabels);
+
+	QStringList colLabels;
+	
+	double dt=1.0/16.0;
+	for (int jj=0; jj < newTrack->score.length(); jj++) {
+		QString tmpstr = QString::number(1.0+dt*jj);
+		colLabels.append(tmpstr);
+	}
+	
+	scoreGrid->setHorizontalHeaderLabels(colLabels);
+	
+	//scoreGrids->setRowCount(20);	
 	//scoreGrid->setColumnCount(newTrack->score.length());
 	
 	//add the tab widget to scoreTabs and send signal to reference table
@@ -314,6 +329,7 @@ void MainWindow::cellChecked(int row, int col) { //add note to score
 	qDebug() << "Adding note to track" << currentTab << "at position" << col << "with pitch" << row;	
 	//qDebug() << "The size of tracks is " << this->song.tracks.size();
 	this->song.addNote(currentTab, col, row);
+	
 }
 
 void MainWindow::cellUnchecked(int row, int col) { //remove note from score
@@ -339,6 +355,56 @@ void MainWindow::editTrackSamples() {
 void MainWindow::exportAudio() {//save to wav file
 	QString fileName = QFileDialog::getSaveFileName(this, "Save As Audio File", "", "WAV Files (*.wav)");
 	
+	//startpulses is an array of time positions indicating when the notes start; can be determined by looking at the score for each track
+	float **startPulses = new float[this->song.tracks.size()];
+	float **durations = new float[this->song.tracks.size()];
+	
+	for (int i = 0; i < this->song.tracks.size(); i++) { //the second dimension should be the length of each track
+		startPulses[i] = new float[this->song.tracks[0]->score.length()];	
+		durations[i] = new float[this->song.tracks[0]->score.length()];
+	}
+	
+	int startPulses_index = 0;
+	for (int i = 0; i < this->song.tracks.size(); i++) {
+		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
+			if (this->song.tracks[i]->score[j].pitch != -1) { //this is assuming for now that every note is going to be a 16th note
+				//if the pitch isn't set to null value then it should be considered the starting position of a note
+				startPulses[i][startPulses_index] = j;
+				
+				//durations gonna be hard coded as 1 for now
+				
+			}
+			else {
+				startPulses[i][startPulses_index] = -1;
+			}
+		}
+	}
+	
+	//durations gonna be hard coded as 1 for now
+	for (int i = 0; i < this->song.tracks.size(); i++) {
+		
+	}
+	
+	//noteNumbers will be the row numbers for each note in each track (maybe use -1 for empty cells)
+	int **noteNumbers;
+	//instrumentHarmonicsA/B are hard-coded for the preset instruments, and then what about the custom ones?
+	float **instrumentHarmonicsA;
+	float **instrumentHarmonicsB;
+	//fileName needs to have the extension removed and be converted to char *
+	std::string str = fileName.toStdString();
+	const char* p = str.c_str();
+	
+	//tempo is in bpm, right? Gonna hard code that to 120 for now
+	double tempo = 120;
+	
+	int numVoices = this->song.tracks.size();
+	
+	int numNotes = this->song.tracks[0]->score.length();
+	qDebug() << "about to call writeWav, with numNotes being" << numNotes;
+	
+	if (writeWav(startPulses, durations, noteNumbers, instrumentHarmonicsA, instrumentHarmonicsB, p, tempo, numVoices, numNotes) == 1) {
+		qDebug("I think there was an error trying to write the wav file");
+	}
 }
 
 //static PyMethodDef PyMethods[] = {
@@ -537,6 +603,7 @@ int MainWindow::pythonTest() {
  * Fill the rest of the voices with 0 duration notes until equal. Start pulse and note number won't matter
  * Will return 0 if it worked, 1 if something went wrong that doesn't crash it
  */
+
 int MainWindow::writeWav(float **startPulses, float **durations, int **noteNumbers, float **instrumentHarmonicsA, float **instrumentHarmonicsB, char *filename, double tempo, int numVoices, int numNotes)
 {
     PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pArgs;
