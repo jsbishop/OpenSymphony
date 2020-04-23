@@ -175,9 +175,9 @@ void MainWindow::newProject() {
 			return;
 	}*/
 	
-    QString newFileName = QFileDialog::getSaveFileName(nullptr, "Create New Project","","OpenSymphony Project (*.txt)");
-    OSPF.setProjectFileName(newFileName);
-    createNewTrack();
+//    QString newFileName = QFileDialog::getSaveFileName(nullptr, "Create New Project","","OpenSymphony Project (*.txt)");
+//    OSPF.setProjectFileName(newFileName);
+//    createNewTrack();
 	
 }
 
@@ -439,7 +439,7 @@ void MainWindow::exportAudio() {//save to wav file
 		//durations[i] = new float[this->song.tracks[0]->score.length()];
 		
 		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
-			if (this->song.tracks[0]->score[j].pitch == -1) {
+            if (this->song.tracks[i]->score[j].pitch == -1) {
                 durations[i][j] = 0;
 			}
 			else {
@@ -455,12 +455,12 @@ void MainWindow::exportAudio() {//save to wav file
 	for (int i = 0; i < this->song.tracks.size(); i++) {
 		noteNumbers[i] = new int[this->song.tracks[0]->score.length()];
 		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
-			if (this->song.tracks[0]->score[j].pitch == -1) {
+            if (this->song.tracks[i]->score[j].pitch == -1) {
 				noteNumbers[i][j] = -1;				
 			}
 			else {
-				qDebug() << this->song.tracks[0]->score[j].pitch;
-                noteNumbers[i][j] = this->song.tracks[0]->score[j].pitch+1;
+                qDebug() << this->song.tracks[i]->score[j].pitch;
+                noteNumbers[i][j] = this->song.tracks[i]->score[j].pitch+1;
 			}
 		}		
 	}
