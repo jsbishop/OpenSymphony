@@ -73,7 +73,7 @@ class MainWindow : public QMainWindow
 		
 		Project song;
 		
-		OSProjectFile OSPF;
+//		OSProjectFile OSPF;
 		
 		QVector<Track *> tracks; //this will store the information for each of the tracks, including maybe the actual notes
 

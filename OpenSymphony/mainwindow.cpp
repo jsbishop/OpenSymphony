@@ -59,20 +59,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	ui->setupUi(this);
 	
-	this->connect(this->ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(newProject()));
-	this->connect(this->ui->actionSave_Project, SIGNAL(triggered(bool)), this, SLOT(saveProject()));
-	this->connect(this->ui->actionSave_Project_As, SIGNAL(triggered(bool)), this, SLOT(saveProjectAs()));
-	this->connect(this->ui->actionOpen, SIGNAL(triggered(bool)), this, SLOT(openProject()));
+    this->connect(this->ui->actionNew_Project, SIGNAL(triggered(bool)), this, SLOT(newProject()));
+    this->connect(this->ui->actionSave_Project, SIGNAL(triggered(bool)), this, SLOT(saveProject()));
+    this->connect(this->ui->actionSave_Project_As, SIGNAL(triggered(bool)), this, SLOT(saveProjectAs()));
+    this->connect(this->ui->actionOpen, SIGNAL(triggered(bool)), this, SLOT(openProject()));
 	
 	
-	this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
+    this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
     this->connect(this->ui->actionRemove_Track, SIGNAL(triggered(bool)), this, SLOT(removeTrack()));
-	this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testFourier()));
+    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testFourier()));
 	
 //    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTest()));
 //    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTestArray()));
 	
-	this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
+    this->connect(this->ui->actionSamples, SIGNAL(triggered(bool)), this, SLOT(editTrackSamples()));
 	this->connect(this->ui->actionExport_to_Audio_File, SIGNAL(triggered(bool)), this, SLOT(exportAudio()));
 	
 	//this->ui->scoreTabs->removeTab(1);	//remove the default tabs
@@ -175,9 +175,9 @@ void MainWindow::newProject() {
 			return;
 	}*/
 	
-	QString newFileName = QFileDialog::getSaveFileName(nullptr, "Create New Project","","OpenSymphony Project (*.txt)");
-	OSPF.setProjectFileName(newFileName);
-	createNewTrack();
+    QString newFileName = QFileDialog::getSaveFileName(nullptr, "Create New Project","","OpenSymphony Project (*.txt)");
+    OSPF.setProjectFileName(newFileName);
+    createNewTrack();
 	
 }
 
@@ -423,13 +423,13 @@ void MainWindow::exportAudio() {//save to wav file
 		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
 			if (this->song.tracks[i]->score[j].pitch != -1) { //this is assuming for now that every note is going to be a 16th note
 				//if the pitch isn't set to null value then it should be considered the starting position of a note
-				startPulses[i][startPulses_index] = j;
+                startPulses[i][j] = j;
 				
 				//durations gonna be hard coded as 1 for now
 				
 			}
 			else {
-				startPulses[i][startPulses_index] = -1;
+                startPulses[i][j] = 0;
 			}
 		}
 	}
@@ -440,7 +440,7 @@ void MainWindow::exportAudio() {//save to wav file
 		
 		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
 			if (this->song.tracks[0]->score[j].pitch == -1) {
-				durations[i][j] = -1;				
+                durations[i][j] = 0;
 			}
 			else {
 				durations[i][j] = 1;

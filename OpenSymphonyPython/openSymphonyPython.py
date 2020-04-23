@@ -8,8 +8,9 @@ def writeWav(starts, durs, notes, fSeriesA, fSeriesB, filename, tempo=120):
     starts = np.asarray(starts)
     durs = np.asarray(durs)
     notes = np.asarray(notes)
-    # print(fSeriesA)
-    # print(fSeriesB)
+    print(starts)
+    print(durs)
+    print(notes)
     harmonics = [[]]
     i = 0
     for harmonicsA, harmonicsB in zip(fSeriesA, fSeriesB):
@@ -68,9 +69,9 @@ def writeWav(starts, durs, notes, fSeriesA, fSeriesB, filename, tempo=120):
 
     path = "../OpenSymphonyPython/wavFiles/"
 
-    file = path + filename + ".wav"
+    # file = path + filename
 
-    wavfile.write(file, fs, song)
+    wavfile.write(filename, fs, song)
 
     return 0
 
@@ -268,11 +269,11 @@ if __name__ == '__main__':
     [0.0, -0.13183625907905278, 0.07795715628868859, 0.005465820394904325, -0.026496233507552803, 0.0064371210718658, -0.02038212454426651, -0.04710743425732519, -0.030681560459952805, 0.026831454243190986]]
     # Ak = [[0.1111, 1.0000, 0.4000, 0.1944, 0.0444, 0.0111, 0, 0.0111, 0],
     #       [0.1155, .3417, 0.1789, 0.1232, 0.0678, 0.0473, 0.0260, 0.0045, 0.0020]]
-    file = "testFromPy0"
+    file = "testFromPy1"
     #
-    # writeWav(start, dur, notes, harmonicsA, harmonicsB, file)
+    writeWav(start, dur, notes, harmonicsA, harmonicsB, file)
 
-    fSeries = findHarmonics("wavFiles/tuba-sus-g2-PB-loop.wav")
+    # fSeries = findHarmonics("wavFiles/tuba-sus-g2-PB-loop.wav")
     # print(fSeries)
 
     # song, fs = synthesizeTest()
