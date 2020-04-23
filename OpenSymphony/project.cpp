@@ -16,6 +16,13 @@ void Project::addTrack(Track *newTrack) {
 	}
 }
 
+void Project::removeTrack(int index) {
+	qDebug() << "Before removing track there are" << this->tracks.size() << "tracks";
+	this->tracks.remove(index);
+	qDebug() << "After removing track there are" << this->tracks.size() << "tracks";
+	
+}
+
 void Project::addNote(int trackNum, int pos, int pitch) {
 	if(this->tracks[trackNum-2] == nullptr) {
 		qDebug() << "it's nullptr and tracknum is" <<trackNum << "and the size of tracks is" << this->tracks.size();

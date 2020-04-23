@@ -113,8 +113,9 @@ void Track::addNote(int pos, int pitch) {
 	if (pos >= this->score.length()) {
 		this->score.resize(pos);
 	}
+
 	this->score[pos].pitch = pitch;
-	
+	qDebug() << "The pitch of the" << this->name << "track at position" << pos << "is" << this->score[pos].pitch << "and it's supposed to be" << pitch;
 }
 
 void Track::removeNote(int pos, int pitch) { //reset note parameters to default values

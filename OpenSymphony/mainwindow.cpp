@@ -66,7 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	
 	this->connect(this->ui->actionNew_Track, SIGNAL(triggered(bool)), this, SLOT(createNewTrack()));
-    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testFourier()));
+    this->connect(this->ui->actionRemove_Track, SIGNAL(triggered(bool)), this, SLOT(removeTrack()));
+	this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(testFourier()));
+	
 //    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTest()));
 //    this->connect(this->ui->testButton, SIGNAL(clicked(bool)), this, SLOT(pythonTestArray()));
 	
@@ -78,8 +80,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	this->songLength = 48;
 	
-	this->testTrack.score.resize(12);
-	addTrackTab(&testTrack);
+
+	//this->testTrack.score.resize(12);
+	//addTrackTab(&testTrack);
     //this->ui->testButton->hide();
 
     //initialize python
@@ -150,12 +153,14 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::newProject() {
-	int ret = QMessageBox::question(this, "OpenSymphony", "Do you want to open in a new window?",
+	/*int ret = QMessageBox::question(this, "OpenSymphony", "Do you want to open in a new window?",
 								   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 	switch(ret) {
 		case QMessageBox::Yes:
 			//open new project in new window
 			//for now I won't try making that work
+			
+			
 			break;
 			
 		case QMessageBox::No:
@@ -168,9 +173,12 @@ void MainWindow::newProject() {
 			
 		default:
 			return;
-	}
+	}*/
 	
-	//QString newFileName = QFileDialog::getSaveFileName(nullptr, "Create New Project","", "OpenSymphony Project (*.txt)","OpenSymphony Project (*.txt)");
+	QString newFileName = QFileDialog::getSaveFileName(nullptr, "Create New Project","","OpenSymphony Project (*.txt)");
+	OSPF.setProjectFileName(newFileName);
+	createNewTrack();
+	
 }
 
 void MainWindow::openProject() {
@@ -243,6 +251,10 @@ void MainWindow::addTrackTab(Track *newTrack) {
 		addNewInstrument(trackName, fname);
 	}
 	newTrack->score.resize(songLength);
+	for (int i = 0; i < newTrack->score.length(); i++) {
+		newTrack->score[i].pitch = -1;
+	}
+	
 	this->song.addTrack(newTrack);
 	
 	//create a new tab widget
@@ -251,11 +263,22 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	//add a table to it
 	qDebug() << "score length:" << newTrack->score.length();
 	
-	QTableWidget *scoreGrid = new QTableWidget(20,newTrack->score.length(),nullptr);
+	QTableWidget *scoreGrid = new QTableWidget(88,newTrack->score.length(),nullptr);
 	
-	QStringList rowLabels = {"A","Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B", "C", "Db", "D", "Eb", "E"};
+	QStringList rowLabels = {"C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A","Bb", "B"};
+	QStringList allRowLabels;
 	
-	scoreGrid->setVerticalHeaderLabels(rowLabels);
+	for (int i = 0; i <8; i++) { 		//for each octave add the notes in the scale (go in descending order)
+		for (int j = 0; j < rowLabels.length(); j++) {
+			QString qs = rowLabels[j];
+			QString currentNote = qs + QString::number(i);
+			allRowLabels.prepend(currentNote);			
+		}
+	}
+	allRowLabels.prepend("C8");	
+	
+	
+	scoreGrid->setVerticalHeaderLabels(allRowLabels);
 
 	QStringList colLabels;
 	
@@ -288,6 +311,14 @@ void MainWindow::addTrackTab(Track *newTrack) {
 	this->ui->scoreTabs->tabBar()->setTabText(1, "Alto Sax");
 	this->connect(scoreGrid,SIGNAL(cellClicked(int,int)), this, SLOT(cellChecked(int, int)));
 
+}
+
+void MainWindow::removeTrack() {
+	int tabIndex = this->ui->scoreTabs->tabBar()->currentIndex();
+	qDebug() << "removing tab at index" << tabIndex << "and gonna remove track number" << (tabIndex-2);
+	this->song.removeTrack(tabIndex-2);
+	qDebug() << "there are now" <<this->song.tracks.size() << "tracks";
+	this->ui->scoreTabs->removeTab(tabIndex);
 }
 
 void MainWindow::adjustGridCheckboxes(QTableWidget *t) { //automatically fill each empty cell of the table with a checkbox 
@@ -346,9 +377,9 @@ void MainWindow::cellChecked(int row, int col) { //add note to score
 	currentTable->item(row,col)->setBackground(Qt::blue);
 	
 	//add note to score
-	qDebug() << "Adding note to track" << currentTab << "at position" << col << "with pitch" << row;	
+	qDebug() << "Adding note to track" << currentTab << "at position" << col << "with pitch" << (87-row);	
 	//qDebug() << "The size of tracks is " << this->song.tracks.size();
-	this->song.addNote(currentTab, col, row);
+	this->song.addNote(currentTab, col, (87-row));
 	
 }
 
@@ -358,9 +389,9 @@ void MainWindow::cellUnchecked(int row, int col) { //remove note from score
 	int currentTab = this->ui->scoreTabs->currentIndex();
 	
 	//remove note from score
-	qDebug() << "Removing note from track" << currentTab << "at position" << col << "with pitch" << row;
-	this->song.removeNote(currentTab,col,row);
-	currentTable->item(row,col)->setBackground(Qt::white);
+	qDebug() << "Removing note from track" << currentTab << "at position" << col << "with pitch" << (87-row);
+	this->song.removeNote(currentTab,col,(87-row));
+	currentTable->item(row,col)->setBackground(Qt::white); //don't do 88-row here because it's directly accessing the table
 	
 }
 
@@ -405,6 +436,8 @@ void MainWindow::exportAudio() {//save to wav file
 	
 	//durations gonna be hard coded as 1 for now
 	for (int i = 0; i < this->song.tracks.size(); i++) {
+		//durations[i] = new float[this->song.tracks[0]->score.length()];
+		
 		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
 			if (this->song.tracks[0]->score[j].pitch == -1) {
 				durations[i][j] = -1;				
@@ -417,12 +450,16 @@ void MainWindow::exportAudio() {//save to wav file
 	
 	//noteNumbers will be the pitch (row number) for each note in each track (maybe use -1 for empty cells)
 	int **noteNumbers;
+	noteNumbers = new int*[this->song.tracks.size()];
+	
 	for (int i = 0; i < this->song.tracks.size(); i++) {
+		noteNumbers[i] = new int[this->song.tracks[0]->score.length()];
 		for (int j = 0; j < this->song.tracks[0]->score.length(); j++) {
 			if (this->song.tracks[0]->score[j].pitch == -1) {
 				noteNumbers[i][j] = -1;				
 			}
 			else {
+				qDebug() << this->song.tracks[0]->score[j].pitch;
 				noteNumbers[i][j] = this->song.tracks[0]->score[j].pitch;
 			}
 		}		
@@ -430,7 +467,16 @@ void MainWindow::exportAudio() {//save to wav file
 	
 	//instrumentHarmonicsA/B are hard-coded for the preset instruments, and then what about the custom ones?
 	float **instrumentHarmonicsA;
+	instrumentHarmonicsA = new float*[this->song.tracks.size()];
+	
 	float **instrumentHarmonicsB;
+	instrumentHarmonicsB = new float*[this->song.tracks.size()];
+	
+	for (int i = 0; i < this->song.tracks.length(); i++) {
+		instrumentHarmonicsA[i] = iBank.getInstrument((this->song.tracks[i]->instrumentName).toStdString())->getHarmonicsA();
+		instrumentHarmonicsB[i] = iBank.getInstrument((this->song.tracks[i]->instrumentName).toStdString())->getHarmonicsB();		
+	}
+	
 	//fileName needs to have the extension removed and be converted to char *
 	std::string str = fileName.toStdString();
 	char* p = new char [str.size()+1];
