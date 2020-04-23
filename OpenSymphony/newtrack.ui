@@ -145,37 +145,37 @@
        </item>
        <item>
         <property name="text">
-         <string>Trumpet</string>
+         <string>trumpet</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Flute</string>
+         <string>flute</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Clarinet</string>
+         <string>clarinet</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Horn</string>
+         <string>horn</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Saxophone</string>
+         <string>saxophone</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Violin</string>
+         <string>violin</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Trombone</string>
+         <string>trombone</string>
         </property>
        </item>
       </widget>

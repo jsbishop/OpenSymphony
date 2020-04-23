@@ -41,6 +41,8 @@ class MainWindow : public QMainWindow
 		void createNewTrack();
 		void addTrackTab(Track *newTrack);
 		
+		void removeTrack();
+		
 		void adjustGridCheckboxes(QTableWidget *t);
 		void adjustGridTimeSignature(int time1, int time2);
 		void adjustGridLength(int length);
@@ -70,6 +72,8 @@ class MainWindow : public QMainWindow
 		Ui::MainWindow *ui;
 		
 		Project song;
+		
+		OSProjectFile OSPF;
 		
 		QVector<Track *> tracks; //this will store the information for each of the tracks, including maybe the actual notes
 
