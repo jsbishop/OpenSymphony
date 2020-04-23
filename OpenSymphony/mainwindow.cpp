@@ -460,7 +460,7 @@ void MainWindow::exportAudio() {//save to wav file
 			}
 			else {
 				qDebug() << this->song.tracks[0]->score[j].pitch;
-				noteNumbers[i][j] = this->song.tracks[0]->score[j].pitch;
+                noteNumbers[i][j] = this->song.tracks[0]->score[j].pitch+1;
 			}
 		}		
 	}
